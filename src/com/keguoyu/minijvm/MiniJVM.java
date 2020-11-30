@@ -16,8 +16,8 @@ public class MiniJVM {
         } else if (argv.versionFlag) {
             System.out.println("MiniJVM Version 1.0");
         } else {
-            JavaVirtualMachine jvm = new JavaVirtualMachine(argv.cpOption, argv.clazz);
-            jvm.start();
+            JavaVirtualMachine jvm = new JavaVirtualMachine();
+            jvm.start(argv.cpOption, argv.clazz);
         }
     }
 
