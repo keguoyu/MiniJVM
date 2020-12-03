@@ -1,6 +1,6 @@
 package com.keguoyu.minijvm;
 
-import com.keguoyu.minijvm.jvm.JavaVirtualMachine;
+import com.keguoyu.minijvm.main.JavaVirtualMachine;
 import com.keguoyu.minijvm.pojo.Args;
 
 /**

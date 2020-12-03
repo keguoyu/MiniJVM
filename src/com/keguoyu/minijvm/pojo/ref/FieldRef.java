@@ -1,7 +1,7 @@
 package com.keguoyu.minijvm.pojo.ref;
 
-public class FieldRef extends SymbolicRef {
+import com.keguoyu.minijvm.pojo.Field;
 
-    public String fullName;
-
+public class FieldRef extends MemberRef {
+    public Field field;
 }

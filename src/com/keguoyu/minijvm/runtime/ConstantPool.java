@@ -1,12 +1,12 @@
 package com.keguoyu.minijvm.runtime;
 
-import com.keguoyu.minijvm.cls.JVMClass;
+import com.keguoyu.minijvm.lang.JvmClass;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConstantPool {
-    private JVMClass<?> jvmClass;
+    private JvmClass<?> jvmClass;
     private List<Object> constants;
 
     public ConstantPool() {
