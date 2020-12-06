@@ -1,5 +1,6 @@
 package com.keguoyu.minijvm.operation;
 
+import com.keguoyu.minijvm.lang.BytecodeReader;
 import com.keguoyu.minijvm.runtime.data.StackFrame;
 import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
 
@@ -138,7 +139,7 @@ public enum NoneOperandOperations implements Operation {
 
 
     @Override
-    public void fetchOperands() {
+    public void fetchOperands(BytecodeReader reader) {
         //nothing to do
     }
 }
