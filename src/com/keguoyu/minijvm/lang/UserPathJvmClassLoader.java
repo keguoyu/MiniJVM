@@ -27,7 +27,7 @@ public class UserPathJvmClassLoader extends JvmClassLoader {
             classFile = tryGetFromFolder(classPath, className);
         }
         if (classFile != null) {
-            System.out.printf("Find class %1s in extPath success\n", className);
+            System.out.printf("Find class %1s in userPath success\n", className);
             return defineClass(classFile);
         }
         return null;

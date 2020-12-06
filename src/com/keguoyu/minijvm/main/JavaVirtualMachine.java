@@ -4,6 +4,7 @@ import com.keguoyu.minijvm.lang.*;
 import com.keguoyu.minijvm.runtime.MethodArea;
 import com.sun.tools.classfile.Attribute;
 import com.sun.tools.classfile.Code_attribute;
+import sun.tools.java.Constants;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,19 +38,10 @@ public final class JavaVirtualMachine {
 
     public void start(String classPath, String className) {
         JvmClass<?> jvmClass = appClassLoader.loadClass(classPath, className);
-        System.out.println(jvmClass);
-        Map<Map.Entry<String, String>, JvmMethod> methods = jvmClass.methods;
-        Collection<JvmMethod> values = methods.values();
-        for (JvmMethod jvmMethod : values) {
-            Code_attribute attribute = (Code_attribute) jvmMethod.method.attributes.get("Code");
-            byte[] code = attribute.code;
-            for (byte b: code) {
-                System.out.println(Integer.toHexString(b));
-            }
-        }
-//        JvmMethod main = jvmClass.getMethod("main",
-//                "([Ljava/lang/String;)V");
-//        System.out.println(main);
+        JvmMethod main = jvmClass.getMethod("main",
+                "([Ljava/lang/String;)V");
+        Code_attribute attribute = (Code_attribute) main.method.attributes.get("Code");
+        System.out.println(Arrays.toString(attribute.code));
     }
 
 }
