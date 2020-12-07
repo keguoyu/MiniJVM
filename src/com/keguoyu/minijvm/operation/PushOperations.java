@@ -3,10 +3,10 @@ package com.keguoyu.minijvm.operation;
 import com.keguoyu.minijvm.lang.BytecodeReader;
 import com.keguoyu.minijvm.runtime.data.StackFrame;
 
-public enum OneOperandOperations implements Operation {
+public enum PushOperations implements Operation {
 
     //0×10
-    BI_PUSH() {
+    BI_PUSH {
 
         byte val;
 
@@ -22,7 +22,7 @@ public enum OneOperandOperations implements Operation {
     },
 
     //0×11
-    SI_PUSH() {
+    SI_PUSH {
 
         short val;
 

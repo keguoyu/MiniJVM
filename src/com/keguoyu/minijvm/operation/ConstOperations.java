@@ -4,10 +4,13 @@ import com.keguoyu.minijvm.lang.BytecodeReader;
 import com.keguoyu.minijvm.runtime.data.StackFrame;
 import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
 
-public enum NoneOperandOperations implements Operation {
+/**
+ * 常量操作指令
+ */
+public enum ConstOperations implements Operation {
 
     //0×00
-    NOP() {
+    NOP {
 
         @Override
         public void execute(StackFrame frame) {
@@ -16,7 +19,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0×01
-    ACONST_NULL() {
+    ACONST_NULL {
 
         @Override
         public void execute(StackFrame frame) {
@@ -25,7 +28,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0×02
-    ICONST_M1() {
+    ICONST_M1 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(-1);
@@ -33,7 +36,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0×03
-    ICONST_0() {
+    ICONST_0 {
 
         @Override
         public void execute(StackFrame frame) {
@@ -42,7 +45,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0×04
-    ICONST_1() {
+    ICONST_1 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(1);
@@ -50,7 +53,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0×05
-    ICONST_2() {
+    ICONST_2 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(2);
@@ -58,7 +61,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0×06
-    ICONST_3() {
+    ICONST_3 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(3);
@@ -66,7 +69,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0×07
-    ICONST_4() {
+    ICONST_4 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(4);
@@ -74,7 +77,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0×08
-    ICONST_5() {
+    ICONST_5 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(5);
@@ -82,7 +85,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0×09
-    LCONST_0() {
+    LCONST_0 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(0L);
@@ -90,7 +93,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0x0a
-    LCONST_1() {
+    LCONST_1 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(1L);
@@ -98,7 +101,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0x0b
-    FCONST_0() {
+    FCONST_0 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(0.0f);
@@ -106,7 +109,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0x0c
-    FCONST_1() {
+    FCONST_1 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(1.0f);
@@ -114,7 +117,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0x0d
-    FCONST_2() {
+    FCONST_2 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(2.0f);
@@ -122,7 +125,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0x0e
-    DCONST_0() {
+    DCONST_0 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(0.0);
@@ -130,7 +133,7 @@ public enum NoneOperandOperations implements Operation {
     },
 
     //0x0f
-    DCONST_1() {
+    DCONST_1 {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(1.0);
