@@ -352,27 +352,27 @@ public enum LoadOperations implements Operation {
     }
 
     public void iload(StackFrame frame, int index) {
-        int val = (int) frame.localVariable.getObject(index);
+        int val = (int) frame.localVariable.get(index);
         frame.operationStack.push(val);
     }
 
     public void lload(StackFrame frame, int index) {
-        long val = (long) frame.localVariable.getObject(index);
+        long val = (long) frame.localVariable.get(index);
         frame.operationStack.push(val);
     }
 
     public void fload(StackFrame frame, int index) {
-        float val = (float) frame.localVariable.getObject(index);
+        float val = (float) frame.localVariable.get(index);
         frame.operationStack.push(val);
     }
 
     public void dload(StackFrame frame, int index) {
-        double val = (double) frame.localVariable.getObject(index);
+        double val = (double) frame.localVariable.get(index);
         frame.operationStack.push(val);
     }
 
     public void aload(StackFrame frame, int index) {
-        Object val = frame.localVariable.getObject(index);
+        Object val = frame.localVariable.get(index);
         frame.operationStack.push(val);
     }
 

@@ -10,11 +10,11 @@ public class LocalVariable {
         slots = new Object[length];
     }
 
-    public void setObject(int index, Object obj) {
+    public void set(int index, Object obj) {
         slots[index] = obj;
     }
 
-    public Object getObject(int index) {
+    public Object get(int index) {
         return slots[index];
     }
 

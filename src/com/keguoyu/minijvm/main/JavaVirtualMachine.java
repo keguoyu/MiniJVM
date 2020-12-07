@@ -1,6 +1,7 @@
 package com.keguoyu.minijvm.main;
 
 import com.keguoyu.minijvm.lang.*;
+import com.keguoyu.minijvm.operation.StoreOperations;
 import com.keguoyu.minijvm.runtime.MethodArea;
 import com.sun.tools.classfile.Attribute;
 import com.sun.tools.classfile.Code_attribute;
