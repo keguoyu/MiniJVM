@@ -387,9 +387,4 @@ public enum StoreOperations implements Operation {
     public void fetchOperands(BytecodeReader reader) {
         //do nothing
     }
-
-    StoreOperations() {
-        StoreOperations[] values = values();
-        System.out.println(Arrays.toString(values));
-    }
 }
