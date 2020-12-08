@@ -267,6 +267,7 @@ public enum MathOperations implements Operation {
         }
     },
 
+    //0x76
     FNEG {
         @Override
         public void execute(StackFrame frame) {
@@ -275,9 +276,14 @@ public enum MathOperations implements Operation {
         }
     },
 
-
-
-    ;
+    //0x77
+    DNEG {
+        @Override
+        public void execute(StackFrame frame) {
+            double v1 = (double) frame.operationStack.pop();
+            frame.operationStack.push(-v1);
+        }
+    };
 
     @Override
     public void fetchOperands(BytecodeReader reader) {
