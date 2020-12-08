@@ -1,6 +1,5 @@
 package com.keguoyu.minijvm.lang;
 
-import com.sun.tools.classfile.Field;
 import com.sun.tools.classfile.Method;
 
 public class JvmMethod {

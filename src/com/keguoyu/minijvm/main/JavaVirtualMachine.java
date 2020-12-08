@@ -41,8 +41,7 @@ public final class JavaVirtualMachine {
         JvmClass<?> jvmClass = appClassLoader.loadClass(classPath, className);
         JvmMethod main = jvmClass.getMethod("main",
                 "([Ljava/lang/String;)V");
-        Code_attribute attribute = (Code_attribute) main.method.attributes.get("Code");
-        System.out.println(Arrays.toString(attribute.code));
+        new BytecodeInvoker().invoke(main);
     }
 
 }

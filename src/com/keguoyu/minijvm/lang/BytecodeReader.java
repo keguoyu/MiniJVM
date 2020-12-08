@@ -25,9 +25,9 @@ public class BytecodeReader {
         return b1 << 24 | b2 << 16 | b3 << 8 | b4;
     }
 
-    public void reset() {
-        code = null;
-        pc = 0;
+    public void reset(byte[] code, int pc) {
+        this.code = code;
+        this.pc = pc;
     }
 
 }

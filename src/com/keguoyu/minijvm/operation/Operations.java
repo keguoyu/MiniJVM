@@ -7,7 +7,9 @@ public class Operations {
 
     private static final Map<Integer, Operation> map = new HashMap<>();
 
+    static {
 
+    }
 
     public static Operation valueOf(byte code) {
         return null;

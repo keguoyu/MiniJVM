@@ -23,11 +23,12 @@ public class JvmStack {
         currentSize++;
     }
 
-    public void pop(StackFrame stackFrame) {
+    public StackFrame pop() {
         checkStackEmpty();
         StackFrame top = topFrame;
         topFrame = top.bottom;
         currentSize--;
+        return top;
     }
 
     public StackFrame currentFrame() {
