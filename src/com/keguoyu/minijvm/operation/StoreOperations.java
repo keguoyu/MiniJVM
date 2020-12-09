@@ -3,7 +3,6 @@ package com.keguoyu.minijvm.operation;
 import com.keguoyu.minijvm.lang.BytecodeReader;
 import com.keguoyu.minijvm.runtime.data.StackFrame;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public enum StoreOperations implements Operation {
@@ -22,6 +21,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             istore(frame, val);
         }
+
+        @Override
+        public String getCode() {
+            return "0x36";
+        }
     },
 
     //0x37
@@ -37,6 +41,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             lstore(frame, val);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x37";
         }
     },
 
@@ -54,6 +63,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             fstore(frame, val);
         }
+
+        @Override
+        public String getCode() {
+            return "0x38";
+        }
     },
 
     //0x39
@@ -70,6 +84,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             dstore(frame, val);
         }
+
+        @Override
+        public String getCode() {
+            return "0x39";
+        }
     },
 
     //0x3a
@@ -85,6 +104,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             astore(frame, val);
         }
+
+        @Override
+        public String getCode() {
+            return "0x3a";
+        }
     },
 
     //0x3b
@@ -92,6 +116,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             istore(frame, 0);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x3b";
         }
     },
 
@@ -101,6 +130,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             istore(frame, 1);
         }
+
+        @Override
+        public String getCode() {
+            return "0x3c";
+        }
     },
 
     //0x3d
@@ -108,6 +142,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             istore(frame, 2);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x3d";
         }
     },
 
@@ -117,6 +156,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             istore(frame, 3);
         }
+
+        @Override
+        public String getCode() {
+            return "0x3e";
+        }
     },
 
     //0x3f
@@ -124,6 +168,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             lstore(frame, 0);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x3f";
         }
     },
 
@@ -133,6 +182,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             lstore(frame, 1);
         }
+
+        @Override
+        public String getCode() {
+            return "0x40";
+        }
     },
 
     //0x41
@@ -140,6 +194,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             lstore(frame, 2);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x41";
         }
     },
 
@@ -149,6 +208,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             lstore(frame, 3);
         }
+
+        @Override
+        public String getCode() {
+            return "0x42";
+        }
     },
 
     //0x43
@@ -156,6 +220,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             fstore(frame, 0);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x43";
         }
     },
 
@@ -165,6 +234,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             fstore(frame, 1);
         }
+
+        @Override
+        public String getCode() {
+            return "0x44";
+        }
     },
 
     //0x45
@@ -172,6 +246,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             fstore(frame, 2);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x45";
         }
     },
 
@@ -181,6 +260,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             fstore(frame, 3);
         }
+
+        @Override
+        public String getCode() {
+            return "0x46";
+        }
     },
 
     //0x47
@@ -188,6 +272,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             dstore(frame, 0);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x47";
         }
     },
 
@@ -197,6 +286,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             dstore(frame, 1);
         }
+
+        @Override
+        public String getCode() {
+            return "0x48";
+        }
     },
 
     //0x49
@@ -204,6 +298,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             dstore(frame, 2);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x49";
         }
     },
 
@@ -213,6 +312,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             dstore(frame, 3);
         }
+
+        @Override
+        public String getCode() {
+            return "0x4a";
+        }
     },
 
     //0x4b
@@ -220,6 +324,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             astore(frame, 0);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x4b";
         }
     },
 
@@ -229,6 +338,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             astore(frame, 1);
         }
+
+        @Override
+        public String getCode() {
+            return "0x4c";
+        }
     },
 
     //0x4d
@@ -237,6 +351,11 @@ public enum StoreOperations implements Operation {
         public void execute(StackFrame frame) {
             astore(frame, 2);
         }
+
+        @Override
+        public String getCode() {
+            return "0x4d";
+        }
     },
 
     //0x4e
@@ -244,6 +363,11 @@ public enum StoreOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             astore(frame, 3);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x4e";
         }
     },
 
@@ -258,6 +382,11 @@ public enum StoreOperations implements Operation {
             checkIndex(array.length, index);
             array[index] = value;
         }
+
+        @Override
+        public String getCode() {
+            return "0x4f";
+        }
     },
 
     //0x50
@@ -270,6 +399,11 @@ public enum StoreOperations implements Operation {
             Objects.requireNonNull(array);
             checkIndex(array.length, index);
             array[index] = value;
+        }
+
+        @Override
+        public String getCode() {
+            return "0x50";
         }
     },
 
@@ -284,6 +418,11 @@ public enum StoreOperations implements Operation {
             checkIndex(array.length, index);
             array[index] = value;
         }
+
+        @Override
+        public String getCode() {
+            return "0x51";
+        }
     },
 
     //0x52
@@ -296,6 +435,11 @@ public enum StoreOperations implements Operation {
             Objects.requireNonNull(array);
             checkIndex(array.length, index);
             array[index] = value;
+        }
+
+        @Override
+        public String getCode() {
+            return "0x52";
         }
     },
 
@@ -310,6 +454,11 @@ public enum StoreOperations implements Operation {
             checkIndex(array.length, index);
             array[index] = value;
         }
+
+        @Override
+        public String getCode() {
+            return "0x53";
+        }
     },
 
     //0x54
@@ -322,6 +471,11 @@ public enum StoreOperations implements Operation {
             Objects.requireNonNull(array);
             checkIndex(array.length, index);
             array[index] = (byte) value;
+        }
+
+        @Override
+        public String getCode() {
+            return "0x54";
         }
     },
 
@@ -336,6 +490,11 @@ public enum StoreOperations implements Operation {
             checkIndex(array.length, index);
             array[index] = (char) value;
         }
+
+        @Override
+        public String getCode() {
+            return "0x55";
+        }
     },
 
     //0x56
@@ -348,6 +507,11 @@ public enum StoreOperations implements Operation {
             Objects.requireNonNull(array);
             checkIndex(array.length, index);
             array[index] = (short) value;
+        }
+
+        @Override
+        public String getCode() {
+            return "0x56";
         }
     };
 

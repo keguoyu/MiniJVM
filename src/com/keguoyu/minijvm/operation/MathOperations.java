@@ -14,6 +14,11 @@ public enum MathOperations implements Operation {
             int result = v1 + v2;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x60";
+        }
     },
 
     //0x61
@@ -24,6 +29,11 @@ public enum MathOperations implements Operation {
             long v2 = (long) frame.operationStack.pop();
             long result = v1 + v2;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x61";
         }
     },
 
@@ -36,6 +46,11 @@ public enum MathOperations implements Operation {
             float result = v1 + v2;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x62";
+        }
     },
 
     //0x63
@@ -46,6 +61,11 @@ public enum MathOperations implements Operation {
             double v2 = (double) frame.operationStack.pop();
             double result = v1 + v2;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x63";
         }
     },
 
@@ -58,6 +78,11 @@ public enum MathOperations implements Operation {
             int result = v2 - v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x64";
+        }
     },
 
     //0x65
@@ -68,6 +93,11 @@ public enum MathOperations implements Operation {
             long v2 = (long) frame.operationStack.pop();
             long result = v2 - v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x65";
         }
     },
 
@@ -80,6 +110,11 @@ public enum MathOperations implements Operation {
             float result = v2 - v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x66";
+        }
     },
 
     //0x67
@@ -90,6 +125,11 @@ public enum MathOperations implements Operation {
             double v2 = (double) frame.operationStack.pop();
             double result = v2 - v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x67";
         }
     },
 
@@ -102,6 +142,11 @@ public enum MathOperations implements Operation {
             int result = v1 * v2;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x68";
+        }
     },
 
     //0x69
@@ -112,6 +157,11 @@ public enum MathOperations implements Operation {
             long v2 = (long) frame.operationStack.pop();
             long result = v1 * v2;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x69";
         }
     },
 
@@ -124,6 +174,11 @@ public enum MathOperations implements Operation {
             float result = v1 * v2;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x6a";
+        }
     },
 
     //0x6b
@@ -134,6 +189,11 @@ public enum MathOperations implements Operation {
             double v2 = (double) frame.operationStack.pop();
             double result = v1 * v2;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x6b";
         }
     },
 
@@ -149,6 +209,11 @@ public enum MathOperations implements Operation {
             int result = v2 / v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x6c";
+        }
     },
 
     //0x6d
@@ -162,6 +227,11 @@ public enum MathOperations implements Operation {
             }
             long result = v2 / v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x6d";
         }
     },
 
@@ -177,6 +247,11 @@ public enum MathOperations implements Operation {
             float result = v2 / v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x6e";
+        }
     },
 
     //0x6f
@@ -190,6 +265,11 @@ public enum MathOperations implements Operation {
             }
             double result = v2 / v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x6f";
         }
     },
 
@@ -205,6 +285,11 @@ public enum MathOperations implements Operation {
             int result = v2 % v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x70";
+        }
     },
 
     //0x71
@@ -218,6 +303,11 @@ public enum MathOperations implements Operation {
             }
             long result = v2 % v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x71";
         }
     },
 
@@ -233,6 +323,11 @@ public enum MathOperations implements Operation {
             float result = v2 % v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x72";
+        }
     },
 
     //0x73
@@ -247,6 +342,11 @@ public enum MathOperations implements Operation {
             double result = v2 % v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x73";
+        }
     },
 
     //0x74
@@ -255,6 +355,11 @@ public enum MathOperations implements Operation {
         public void execute(StackFrame frame) {
             int v1 = (int) frame.operationStack.pop();
             frame.operationStack.push(-v1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x74";
         }
     },
 
@@ -265,6 +370,11 @@ public enum MathOperations implements Operation {
             long v1 = (long) frame.operationStack.pop();
             frame.operationStack.push(-v1);
         }
+
+        @Override
+        public String getCode() {
+            return "0x75";
+        }
     },
 
     //0x76
@@ -274,6 +384,11 @@ public enum MathOperations implements Operation {
             float v1 = (float) frame.operationStack.pop();
             frame.operationStack.push(-v1);
         }
+
+        @Override
+        public String getCode() {
+            return "0x76";
+        }
     },
 
     //0x77
@@ -282,6 +397,11 @@ public enum MathOperations implements Operation {
         public void execute(StackFrame frame) {
             double v1 = (double) frame.operationStack.pop();
             frame.operationStack.push(-v1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x77";
         }
     };
 

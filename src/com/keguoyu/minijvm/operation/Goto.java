@@ -7,8 +7,8 @@ public enum Goto {
     GOTO;
 
     public void branch(StackFrame frame, int offset) {
-        int curPc = frame.getJvmThread().getPc();
-        int nextPc = curPc + offset;
-
+        int pc = frame.getJvmThread().getPc();
+        pc = pc + offset;
+        frame.setNextPC(pc);
     }
 }

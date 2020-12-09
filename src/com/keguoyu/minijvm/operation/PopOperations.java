@@ -11,6 +11,11 @@ public enum PopOperations implements Operation {
         public void execute(StackFrame frame) {
             frame.operationStack.pop();
         }
+
+        @Override
+        public String getCode() {
+            return "0x57";
+        }
     },
 
     //0x58
@@ -19,6 +24,11 @@ public enum PopOperations implements Operation {
         public void execute(StackFrame frame) {
             frame.operationStack.pop();
             frame.operationStack.pop();
+        }
+
+        @Override
+        public String getCode() {
+            return "0x58";
         }
     };
 

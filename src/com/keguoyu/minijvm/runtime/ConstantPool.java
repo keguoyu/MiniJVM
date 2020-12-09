@@ -1,27 +1,29 @@
 package com.keguoyu.minijvm.runtime;
 
-import com.keguoyu.minijvm.lang.JvmClass;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class ConstantPool {
-    private JvmClass<?> jvmClass;
-    private List<Object> constants;
+    private Object[] constants;
+    private int position;
 
-    public ConstantPool() {
-        constants = new ArrayList<>();
+    public void makeConstants(int newSize) {
+        if (constants == null) {
+            constants = new Object[newSize];
+        } else {
+            constants = Arrays.copyOf(constants, newSize);
+        }
     }
 
-    public void add(Object obj) {
-        constants.add(obj);
+    public int getOriginSize() {
+        return constants == null ? 0 : constants.length;
     }
 
-    @Override
-    public String toString() {
-        return "ConstantPool{" +
-                "jvmClass=" + jvmClass +
-                ", constants=" + constants +
-                '}';
+    public void set(int position, Object object) {
+        constants[position] = object;
     }
+
+    public Object get(int position) {
+        return constants[position];
+    }
+
 }

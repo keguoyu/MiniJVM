@@ -1,5 +1,7 @@
 package com.keguoyu.minijvm.runtime.data;
 
+import java.util.Arrays;
+
 /**
  * 局部变量表
  */
@@ -18,4 +20,10 @@ public class LocalVariable {
         return slots[index];
     }
 
+    @Override
+    public String toString() {
+        return "LocalVariable{" +
+                "slots=" + Arrays.toString(slots) +
+                '}';
+    }
 }

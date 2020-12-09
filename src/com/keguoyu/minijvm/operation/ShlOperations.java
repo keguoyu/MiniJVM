@@ -15,6 +15,11 @@ public enum ShlOperations implements Operation{
             int result = v2 << s;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x78";
+        }
     },
 
     //0x79
@@ -26,6 +31,11 @@ public enum ShlOperations implements Operation{
             int s = v1 & 0x3f;
             long result = v2 << s;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x79";
         }
     },
 
@@ -39,6 +49,11 @@ public enum ShlOperations implements Operation{
             int result = v2 >> s;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x7a";
+        }
     },
 
     //0x7b
@@ -50,6 +65,11 @@ public enum ShlOperations implements Operation{
             int s = v1 & 0x3f;
             long result = v2 >> s;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x7b";
         }
     },
 
@@ -63,6 +83,11 @@ public enum ShlOperations implements Operation{
             int result = v2 >> s;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x7c";
+        }
     },
 
     //0x7d
@@ -74,6 +99,11 @@ public enum ShlOperations implements Operation{
             int s = v1 & 0x3f;
             long result = v2 >> s;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x7d";
         }
     },
 

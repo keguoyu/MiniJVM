@@ -14,6 +14,11 @@ public enum CmpOperations implements Operation {
             int result = Long.compare(v1, v2);
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x94";
+        }
     },
 
     //0x95
@@ -28,6 +33,11 @@ public enum CmpOperations implements Operation {
             } catch (Exception exception) {
                 frame.operationStack.push(-1);
             }
+        }
+
+        @Override
+        public String getCode() {
+            return "0x95";
         }
     },
 
@@ -44,6 +54,11 @@ public enum CmpOperations implements Operation {
                 frame.operationStack.push(1);
             }
         }
+
+        @Override
+        public String getCode() {
+            return "0x96";
+        }
     },
 
     //0x97
@@ -59,6 +74,11 @@ public enum CmpOperations implements Operation {
                 frame.operationStack.push(-1);
             }
         }
+
+        @Override
+        public String getCode() {
+            return "0x97";
+        }
     },
 
     //0x98
@@ -73,6 +93,11 @@ public enum CmpOperations implements Operation {
             } catch (Exception exception) {
                 frame.operationStack.push(1);
             }
+        }
+
+        @Override
+        public String getCode() {
+            return "0x98";
         }
     }
     ;

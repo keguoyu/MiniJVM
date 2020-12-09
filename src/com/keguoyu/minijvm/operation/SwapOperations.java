@@ -19,5 +19,10 @@ public enum SwapOperations implements Operation{
             frame.operationStack.push(pop1);
             frame.operationStack.push(pop2);
         }
+
+        @Override
+        public String getCode() {
+            return "0x5f";
+        }
     };
 }

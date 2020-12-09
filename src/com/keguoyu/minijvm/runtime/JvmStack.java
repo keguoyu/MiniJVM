@@ -32,7 +32,6 @@ public class JvmStack {
     }
 
     public StackFrame currentFrame() {
-        checkStackEmpty();
         return topFrame;
     }
 

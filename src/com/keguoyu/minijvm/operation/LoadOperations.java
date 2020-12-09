@@ -21,6 +21,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             iload(frame, val);
         }
+
+        @Override
+        public String getCode() {
+            return "0x15";
+        }
     },
 
     //0x16
@@ -35,6 +40,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             lload(frame, val);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x16";
         }
     },
 
@@ -52,6 +62,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             fload(frame, val);
         }
+
+        @Override
+        public String getCode() {
+            return "0x17";
+        }
     },
 
     //0x18
@@ -66,6 +81,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             dload(frame, val);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x18";
         }
     },
 
@@ -82,6 +102,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             aload(frame, val);
         }
+
+        @Override
+        public String getCode() {
+            return "0x19";
+        }
     },
 
     //0x1a
@@ -91,6 +116,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             fload(frame, 0);
         }
+
+        @Override
+        public String getCode() {
+            return "0x1a";
+        }
     },
 
     //0x1b
@@ -98,6 +128,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             iload(frame, 1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x1b";
         }
     },
 
@@ -107,6 +142,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             iload(frame, 2);
         }
+
+        @Override
+        public String getCode() {
+            return "0x1c";
+        }
     },
 
     //0x1d
@@ -114,6 +154,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             iload(frame, 3);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x1d";
         }
     },
 
@@ -124,6 +169,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             lload(frame, 0);
         }
+
+        @Override
+        public String getCode() {
+            return "0x1e";
+        }
     },
 
     //0x1f
@@ -131,6 +181,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             lload(frame, 1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x1f";
         }
     },
 
@@ -140,6 +195,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             lload(frame, 2);
         }
+
+        @Override
+        public String getCode() {
+            return "0x20";
+        }
     },
 
     //0x21
@@ -147,6 +207,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             lload(frame, 3);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x21";
         }
     },
 
@@ -157,6 +222,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             fload(frame, 0);
         }
+
+        @Override
+        public String getCode() {
+            return "0x22";
+        }
     },
 
     //0x23
@@ -164,6 +234,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             fload(frame, 1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x23";
         }
     },
 
@@ -173,6 +248,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             fload(frame, 2);
         }
+
+        @Override
+        public String getCode() {
+            return "0x24";
+        }
     },
 
     //0x25
@@ -180,6 +260,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             fload(frame, 3);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x25";
         }
     },
 
@@ -190,6 +275,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             dload(frame, 0);
         }
+
+        @Override
+        public String getCode() {
+            return "0x26";
+        }
     },
 
     //0x27
@@ -197,6 +287,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             dload(frame, 1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x27";
         }
     },
 
@@ -206,6 +301,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             dload(frame, 2);
         }
+
+        @Override
+        public String getCode() {
+            return "0x28";
+        }
     },
 
     //0x29
@@ -213,6 +313,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             dload(frame, 3);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x29";
         }
     },
 
@@ -223,6 +328,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             aload(frame, 0);
         }
+
+        @Override
+        public String getCode() {
+            return "0x2a";
+        }
     },
 
     //0x2b
@@ -230,6 +340,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             aload(frame, 1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x2b";
         }
     },
 
@@ -239,6 +354,11 @@ public enum LoadOperations implements Operation {
         public void execute(StackFrame frame) {
             aload(frame, 2);
         }
+
+        @Override
+        public String getCode() {
+            return "0x2c";
+        }
     },
 
     //0x2d
@@ -246,6 +366,11 @@ public enum LoadOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             aload(frame, 3);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x2d";
         }
     },
 
@@ -259,6 +384,11 @@ public enum LoadOperations implements Operation {
             checkIndex(iArray.length, index);
             frame.operationStack.push(iArray[index]);
         }
+
+        @Override
+        public String getCode() {
+            return "0x2e";
+        }
     },
 
     //0x2f
@@ -270,6 +400,11 @@ public enum LoadOperations implements Operation {
             Objects.requireNonNull(iArray);
             checkIndex(iArray.length, index);
             frame.operationStack.push(iArray[index]);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x2f";
         }
     },
 
@@ -283,6 +418,11 @@ public enum LoadOperations implements Operation {
             checkIndex(iArray.length, index);
             frame.operationStack.push(iArray[index]);
         }
+
+        @Override
+        public String getCode() {
+            return "0x30";
+        }
     },
 
     //0x31
@@ -294,6 +434,11 @@ public enum LoadOperations implements Operation {
             Objects.requireNonNull(iArray);
             checkIndex(iArray.length, index);
             frame.operationStack.push(iArray[index]);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x31";
         }
     },
 
@@ -307,6 +452,11 @@ public enum LoadOperations implements Operation {
             checkIndex(iArray.length, index);
             frame.operationStack.push(iArray[index]);
         }
+
+        @Override
+        public String getCode() {
+            return "0x32";
+        }
     },
 
     //0x33
@@ -318,6 +468,11 @@ public enum LoadOperations implements Operation {
             Objects.requireNonNull(iArray);
             checkIndex(iArray.length, index);
             frame.operationStack.push(iArray[index]);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x33";
         }
     },
 
@@ -331,6 +486,11 @@ public enum LoadOperations implements Operation {
             checkIndex(iArray.length, index);
             frame.operationStack.push(iArray[index]);
         }
+
+        @Override
+        public String getCode() {
+            return "0x34";
+        }
     },
 
     //0x35
@@ -342,6 +502,11 @@ public enum LoadOperations implements Operation {
             Objects.requireNonNull(iArray);
             checkIndex(iArray.length, index);
             frame.operationStack.push(iArray[index]);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x35";
         }
     };
 

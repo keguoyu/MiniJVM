@@ -13,6 +13,11 @@ public enum DupOperations implements Operation{
             frame.operationStack.push(pop);
             frame.operationStack.push(pop);
         }
+
+        @Override
+        public String getCode() {
+            return "0x59";
+        }
     },
 
     //0x5a
@@ -24,6 +29,11 @@ public enum DupOperations implements Operation{
             frame.operationStack.push(pop1);
             frame.operationStack.push(pop2);
             frame.operationStack.push(pop1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x5a";
         }
     },
 
@@ -39,6 +49,11 @@ public enum DupOperations implements Operation{
             frame.operationStack.push(pop3);
             frame.operationStack.push(pop1);
         }
+
+        @Override
+        public String getCode() {
+            return "0x5b";
+        }
     },
 
     //0x5c
@@ -51,6 +66,11 @@ public enum DupOperations implements Operation{
             frame.operationStack.push(pop1);
             frame.operationStack.push(pop2);
             frame.operationStack.push(pop1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x5c";
         }
     },
 
@@ -66,6 +86,11 @@ public enum DupOperations implements Operation{
             frame.operationStack.push(pop3);
             frame.operationStack.push(pop2);
             frame.operationStack.push(pop1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x5d";
         }
     },
 
@@ -83,6 +108,11 @@ public enum DupOperations implements Operation{
             frame.operationStack.push(pop3);
             frame.operationStack.push(pop2);
             frame.operationStack.push(pop1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x5e";
         }
     };
 

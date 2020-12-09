@@ -9,21 +9,31 @@ import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
  */
 public enum ConstOperations implements Operation {
 
-    //0×00
+    //0x00
     NOP {
 
         @Override
         public void execute(StackFrame frame) {
 
         }
+
+        @Override
+        public String getCode() {
+            return "0x00";
+        }
     },
 
-    //0×01
+    //0x01
     ACONST_NULL {
 
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(null);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x01";
         }
     },
 
@@ -32,6 +42,11 @@ public enum ConstOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(-1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x02";
         }
     },
 
@@ -42,6 +57,11 @@ public enum ConstOperations implements Operation {
         public void execute(StackFrame frame) {
             frame.operationStack.push(0);
         }
+
+        @Override
+        public String getCode() {
+            return "0x03";
+        }
     },
 
     //0×04
@@ -49,6 +69,11 @@ public enum ConstOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x04";
         }
     },
 
@@ -58,6 +83,11 @@ public enum ConstOperations implements Operation {
         public void execute(StackFrame frame) {
             frame.operationStack.push(2);
         }
+
+        @Override
+        public String getCode() {
+            return "0x05";
+        }
     },
 
     //0×06
@@ -65,6 +95,11 @@ public enum ConstOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(3);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x06";
         }
     },
 
@@ -74,6 +109,11 @@ public enum ConstOperations implements Operation {
         public void execute(StackFrame frame) {
             frame.operationStack.push(4);
         }
+
+        @Override
+        public String getCode() {
+            return "0x07";
+        }
     },
 
     //0×08
@@ -81,6 +121,11 @@ public enum ConstOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(5);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x08";
         }
     },
 
@@ -90,6 +135,11 @@ public enum ConstOperations implements Operation {
         public void execute(StackFrame frame) {
             frame.operationStack.push(0L);
         }
+
+        @Override
+        public String getCode() {
+            return "0x09";
+        }
     },
 
     //0x0a
@@ -97,6 +147,11 @@ public enum ConstOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(1L);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x0a";
         }
     },
 
@@ -106,6 +161,11 @@ public enum ConstOperations implements Operation {
         public void execute(StackFrame frame) {
             frame.operationStack.push(0.0f);
         }
+
+        @Override
+        public String getCode() {
+            return "0x0b";
+        }
     },
 
     //0x0c
@@ -113,6 +173,11 @@ public enum ConstOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(1.0f);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x0c";
         }
     },
 
@@ -122,6 +187,11 @@ public enum ConstOperations implements Operation {
         public void execute(StackFrame frame) {
             frame.operationStack.push(2.0f);
         }
+
+        @Override
+        public String getCode() {
+            return "0x0d";
+        }
     },
 
     //0x0e
@@ -130,6 +200,11 @@ public enum ConstOperations implements Operation {
         public void execute(StackFrame frame) {
             frame.operationStack.push(0.0);
         }
+
+        @Override
+        public String getCode() {
+            return "0x0e";
+        }
     },
 
     //0x0f
@@ -137,6 +212,11 @@ public enum ConstOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push(1.0);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x0f";
         }
     };
 

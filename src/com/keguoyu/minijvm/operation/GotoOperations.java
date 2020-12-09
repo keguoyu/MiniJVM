@@ -3,29 +3,27 @@ package com.keguoyu.minijvm.operation;
 import com.keguoyu.minijvm.lang.BytecodeReader;
 import com.keguoyu.minijvm.runtime.data.StackFrame;
 
-public enum IncOperations implements Operation{
+public enum GotoOperations implements Operation {
 
-    //0x84
-    IINC {
+    GOTO {
 
-        byte index;
-        int cons;
+        short offset;
+
         @Override
         public void fetchOperands(BytecodeReader reader) {
-            index = reader.readByte();
-            cons = reader.readByte();
+            offset = reader.readShort();
         }
 
         @Override
         public void execute(StackFrame frame) {
-            int value = (int) frame.localVariable.get(index);
-            value += cons;
-            frame.localVariable.set(index, value);
+            int pc = frame.getJvmThread().getPc();
+            pc = pc + offset;
+            frame.setNextPC(pc);
         }
 
         @Override
         public String getCode() {
-            return "0x84";
+            return "0xa7";
         }
     }
 

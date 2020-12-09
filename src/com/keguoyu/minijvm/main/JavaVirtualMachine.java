@@ -1,6 +1,7 @@
 package com.keguoyu.minijvm.main;
 
 import com.keguoyu.minijvm.lang.*;
+import com.keguoyu.minijvm.operation.OperationFactory;
 import com.keguoyu.minijvm.operation.StoreOperations;
 import com.keguoyu.minijvm.runtime.MethodArea;
 import com.sun.tools.classfile.Attribute;
@@ -41,6 +42,7 @@ public final class JavaVirtualMachine {
         JvmClass<?> jvmClass = appClassLoader.loadClass(classPath, className);
         JvmMethod main = jvmClass.getMethod("main",
                 "([Ljava/lang/String;)V");
+        OperationFactory.initOperation();
         new BytecodeInvoker().invoke(main);
     }
 

@@ -17,6 +17,7 @@ public class JvmThread {
     }
 
     public void pushFrame(StackFrame stackFrame) {
+        stackFrame.attachThread(this);
         jvmStack.push(stackFrame);
     }
 

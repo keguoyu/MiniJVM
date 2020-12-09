@@ -5,7 +5,7 @@ import com.keguoyu.minijvm.runtime.data.StackFrame;
 
 public enum PushOperations implements Operation {
 
-    //0×10
+    //0x10
     BI_PUSH {
 
         byte val;
@@ -13,15 +13,21 @@ public enum PushOperations implements Operation {
         @Override
         public void fetchOperands(BytecodeReader reader) {
             val = reader.readByte();
+            System.out.println("BIPUSH " + (int)val);
         }
 
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push((int)val);
         }
+
+        @Override
+        public String getCode() {
+            return "0x10";
+        }
     },
 
-    //0×11
+    //0x11
     SI_PUSH {
 
         short val;
@@ -34,6 +40,11 @@ public enum PushOperations implements Operation {
         @Override
         public void execute(StackFrame frame) {
             frame.operationStack.push((int)val);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x11";
         }
     }
 

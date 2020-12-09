@@ -1,9 +1,11 @@
 package com.keguoyu.minijvm.lang;
 
+import java.nio.ByteBuffer;
+
 public class BytecodeReader {
 
     public byte[] code;
-    public int pc;
+    public int pc = 0;
 
     public byte readByte() {
         byte b = code[pc];
@@ -13,8 +15,10 @@ public class BytecodeReader {
 
     public short readShort() {
         byte b1= readByte();
-        byte b2 = readByte();
-        return (short) (b1 << 8 | b2);
+        byte b2 =  readByte();
+        ByteBuffer byteBuffer = ByteBuffer.allocate(2);
+        byteBuffer.put(new byte[]{b1, b2});
+        return byteBuffer.getShort(0);
     }
 
     public int readInt() {
@@ -22,7 +26,9 @@ public class BytecodeReader {
         byte b2 = readByte();
         byte b3 = readByte();
         byte b4 = readByte();
-        return b1 << 24 | b2 << 16 | b3 << 8 | b4;
+        ByteBuffer byteBuffer = ByteBuffer.allocate(4);
+        byteBuffer.put(new byte[]{b1, b2, b3, b4});
+        return byteBuffer.getInt(0);
     }
 
     public void reset(byte[] code, int pc) {

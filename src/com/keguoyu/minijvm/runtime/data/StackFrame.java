@@ -9,9 +9,23 @@ public class StackFrame {
     public OperationStack operationStack;
     public JvmThread jvmThread;
 
+    private int nextPC;
+
+    public void setNextPC(int nextPC) {
+        this.nextPC = nextPC;
+    }
+
+    public int getNextPC() {
+        return nextPC;
+    }
+
     public StackFrame(int maxLocals, int maxOperands) {
         localVariable = new LocalVariable(maxLocals);
         operationStack = new OperationStack(maxOperands);
+    }
+
+    public void attachThread(JvmThread jvmThread) {
+        this.jvmThread = jvmThread;
     }
 
     public JvmThread getJvmThread() {
@@ -24,5 +38,15 @@ public class StackFrame {
 
     public OperationStack getOperationStack() {
         return operationStack;
+    }
+
+    @Override
+    public String toString() {
+        return "StackFrame{" +
+                "bottom=" + bottom +
+                ", localVariable=" + localVariable +
+                ", operationStack=" + operationStack +
+                ", jvmThread=" + jvmThread +
+                '}';
     }
 }

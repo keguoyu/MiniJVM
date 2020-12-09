@@ -14,6 +14,11 @@ public enum CondOperations implements Operation {
                go(frame);
            }
         }
+
+        @Override
+        public String getCode() {
+            return "0x99";
+        }
     },
 
     //0x9a
@@ -24,6 +29,11 @@ public enum CondOperations implements Operation {
             if (v1 != 0) {
                 go(frame);
             }
+        }
+
+        @Override
+        public String getCode() {
+            return "0x9a";
         }
     },
 
@@ -36,6 +46,11 @@ public enum CondOperations implements Operation {
                 go(frame);
             }
         }
+
+        @Override
+        public String getCode() {
+            return "0x9b";
+        }
     },
 
     //0x9c
@@ -46,6 +61,11 @@ public enum CondOperations implements Operation {
             if (v1 >= 0) {
                 go(frame);
             }
+        }
+
+        @Override
+        public String getCode() {
+            return "0x9c";
         }
     },
 
@@ -58,6 +78,11 @@ public enum CondOperations implements Operation {
                 go(frame);
             }
         }
+
+        @Override
+        public String getCode() {
+            return "0x9d";
+        }
     },
 
     //0x9e
@@ -68,6 +93,11 @@ public enum CondOperations implements Operation {
             if (v1 <= 0) {
                 go(frame);
             }
+        }
+
+        @Override
+        public String getCode() {
+            return "0x9e";
         }
     },
 
@@ -81,6 +111,11 @@ public enum CondOperations implements Operation {
                 go(frame);
             }
         }
+
+        @Override
+        public String getCode() {
+            return "0x9f";
+        }
     },
 
     //0xa0
@@ -92,6 +127,11 @@ public enum CondOperations implements Operation {
             if (v1 != v2) {
                 go(frame);
             }
+        }
+
+        @Override
+        public String getCode() {
+            return "0xa0";
         }
     },
 
@@ -105,6 +145,11 @@ public enum CondOperations implements Operation {
                 go(frame);
             }
         }
+
+        @Override
+        public String getCode() {
+            return "0xa1";
+        }
     },
 
     //0xa2
@@ -116,6 +161,11 @@ public enum CondOperations implements Operation {
             if (v1 <= v2) {
                 go(frame);
             }
+        }
+
+        @Override
+        public String getCode() {
+            return "0xa2";
         }
     },
 
@@ -129,6 +179,11 @@ public enum CondOperations implements Operation {
                 go(frame);
             }
         }
+
+        @Override
+        public String getCode() {
+            return "0xa3";
+        }
     },
 
     //0xa4
@@ -140,6 +195,11 @@ public enum CondOperations implements Operation {
             if (v1 >= v2) {
                 go(frame);
             }
+        }
+
+        @Override
+        public String getCode() {
+            return "0xa4";
         }
     },
 
@@ -153,6 +213,11 @@ public enum CondOperations implements Operation {
                 go(frame);
             }
         }
+
+        @Override
+        public String getCode() {
+            return "0xa5";
+        }
     },
 
     //0xa6
@@ -164,6 +229,11 @@ public enum CondOperations implements Operation {
             if (v1 != v2) {
                 go(frame);
             }
+        }
+
+        @Override
+        public String getCode() {
+            return "0xa6";
         }
     }
 

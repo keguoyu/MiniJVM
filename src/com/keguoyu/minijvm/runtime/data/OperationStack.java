@@ -1,5 +1,7 @@
 package com.keguoyu.minijvm.runtime.data;
 
+import java.util.Arrays;
+
 /**
  * 操作数栈
  */
@@ -19,4 +21,11 @@ public class OperationStack {
         return objects[--size];
     }
 
+    @Override
+    public String toString() {
+        return "OperationStack{" +
+                "size=" + size +
+                ", objects=" + Arrays.toString(objects) +
+                '}';
+    }
 }

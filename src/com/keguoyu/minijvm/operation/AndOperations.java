@@ -14,6 +14,11 @@ public enum AndOperations implements Operation{
             int result = v1 & v2;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x7e";
+        }
     },
 
     //0x7f
@@ -24,6 +29,11 @@ public enum AndOperations implements Operation{
             long v2 = (long) frame.operationStack.pop();
             long result = v1 & v2;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x7f";
         }
     };
 

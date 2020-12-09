@@ -13,6 +13,11 @@ public enum CastOperations implements Operation {
             long result = (long)v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x85";
+        }
     },
 
     //0x86
@@ -22,6 +27,11 @@ public enum CastOperations implements Operation {
             int v1 = (int) frame.operationStack.pop();
             float result = (float) v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x86";
         }
     },
 
@@ -33,6 +43,11 @@ public enum CastOperations implements Operation {
             double result = (double) v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x87";
+        }
     },
 
     //0x88
@@ -42,6 +57,11 @@ public enum CastOperations implements Operation {
             long v1 = (long) frame.operationStack.pop();
             int result = (int) v1;
             frame.operationStack.push(result );
+        }
+
+        @Override
+        public String getCode() {
+            return "0x88";
         }
     },
 
@@ -53,6 +73,11 @@ public enum CastOperations implements Operation {
             float result = (float) v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x89";
+        }
     },
 
     //0x8a
@@ -62,6 +87,11 @@ public enum CastOperations implements Operation {
             long v1 = (long) frame.operationStack.pop();
             double result = (double) v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x8a";
         }
     },
 
@@ -73,6 +103,11 @@ public enum CastOperations implements Operation {
             int result = (int) v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x8b";
+        }
     },
 
     //0x8c
@@ -82,6 +117,11 @@ public enum CastOperations implements Operation {
             float v1 = (float) frame.operationStack.pop();
             long result = (long) v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x8c";
         }
     },
 
@@ -93,6 +133,11 @@ public enum CastOperations implements Operation {
             double result = (double) v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x8d";
+        }
     },
 
     //0x8e
@@ -102,6 +147,11 @@ public enum CastOperations implements Operation {
             double v1 = (double) frame.operationStack.pop();
             int result = (int) v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x8e";
         }
     },
 
@@ -113,6 +163,11 @@ public enum CastOperations implements Operation {
           long result = (long) v1;
           frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x8f";
+        }
     },
 
     //0x90
@@ -122,6 +177,11 @@ public enum CastOperations implements Operation {
             double v1 = (double) frame.operationStack.pop();
             float result = (float) v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x90";
         }
     },
 
@@ -133,6 +193,11 @@ public enum CastOperations implements Operation {
             byte result = (byte) v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x91";
+        }
     },
 
     //0x92
@@ -143,6 +208,11 @@ public enum CastOperations implements Operation {
             char result = (char) v1;
             frame.operationStack.push(result);
         }
+
+        @Override
+        public String getCode() {
+            return "0x92";
+        }
     },
 
     //0x93
@@ -152,6 +222,11 @@ public enum CastOperations implements Operation {
             int v1 = (int) frame.operationStack.pop();
             short result = (short) v1;
             frame.operationStack.push(result);
+        }
+
+        @Override
+        public String getCode() {
+            return "0x93";
         }
     }
     ;
