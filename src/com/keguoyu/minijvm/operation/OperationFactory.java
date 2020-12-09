@@ -6,9 +6,11 @@ import java.util.*;
 
 public class OperationFactory {
 
+    private static volatile boolean init = false;
+
     private static final Map<String, Operation> map = new HashMap<>(256);
 
-    public static void initOperation() {
+    private static void initOperation() {
         List<Operation> operations = new ArrayList<>();
         operations.addAll(Arrays.asList(AndOperations.values()));
         operations.addAll(Arrays.asList(CastOperations.values()));
@@ -31,6 +33,15 @@ public class OperationFactory {
             map.put(operation.getCode(), operation);
         }
         Debugger.printf("Load %1s operations successfully \n", map.size());
+    }
+
+    public static void checkInitOrNot() {
+        synchronized (OperationFactory.class) {
+            if (!init) {
+                initOperation();
+                init = true;
+            }
+        }
     }
 
     public static Operation valueOf(String code) {

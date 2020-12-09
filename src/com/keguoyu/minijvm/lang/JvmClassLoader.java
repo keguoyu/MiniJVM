@@ -2,6 +2,8 @@ package com.keguoyu.minijvm.lang;
 
 
 import com.keguoyu.minijvm.main.JavaVirtualMachine;
+import com.keguoyu.minijvm.pojo.ref.ClassRef;
+import com.keguoyu.minijvm.runtime.ConstantPool;
 import com.keguoyu.minijvm.runtime.MethodArea;
 import com.keguoyu.minijvm.utils.Debugger;
 import com.sun.tools.classfile.ClassFile;
@@ -50,7 +52,8 @@ public abstract class JvmClassLoader {
         JvmClass<?> jvmClass = new JvmClass<>(classFile, this);
         String className = "";
         try {
-            className = classFile.getName();;
+            className = classFile.getName();
+            transformRuntimeConstantPool(jvmClass);
         } catch (ConstantPoolException e) {
             Debugger.printlnError(e);
         }
@@ -63,6 +66,47 @@ public abstract class JvmClassLoader {
      */
     private void verify(String className, JvmClass<?> jvmClass) {
         Debugger.printf("verify %1s success\n", className);
+    }
+
+    private void transformRuntimeConstantPool(JvmClass<?> jvmClass) throws ConstantPoolException {
+        final MethodArea methodArea = JavaVirtualMachine.getMethodArea();
+        final ConstantPool constantPool = methodArea.getConstantPool();
+        final int originIndex = constantPool.getOriginSize();
+        constantPool.makeConstants(jvmClass.classFile.constant_pool.size());
+        for (int i = 0; i < jvmClass.classFile.constant_pool.size(); i++) {
+            com.sun.tools.classfile.ConstantPool.CPInfo cpInfo = jvmClass.classFile.constant_pool.get(i);
+            if (cpInfo != null) {
+                int newPosition = originIndex + i;
+                switch (cpInfo.getTag()) {
+                    case com.sun.tools.classfile.ConstantPool.CONSTANT_Integer:
+                        constantPool.set(newPosition, ((com.sun.tools.classfile.ConstantPool.CONSTANT_Integer_info) cpInfo).value);
+                        break;
+                    case com.sun.tools.classfile.ConstantPool.CONSTANT_Float:
+                        constantPool.set(newPosition, ((com.sun.tools.classfile.ConstantPool.CONSTANT_Float_info) cpInfo).value);
+                        break;
+                    case com.sun.tools.classfile.ConstantPool.CONSTANT_Long:
+                        constantPool.set(newPosition, ((com.sun.tools.classfile.ConstantPool.CONSTANT_Long_info) cpInfo).value);
+                        break;
+                    case com.sun.tools.classfile.ConstantPool.CONSTANT_Double:
+                        constantPool.set(newPosition, ((com.sun.tools.classfile.ConstantPool.CONSTANT_Double_info) cpInfo).value);
+                        break;
+                    case com.sun.tools.classfile.ConstantPool.CONSTANT_String:
+                        constantPool.set(newPosition, ((com.sun.tools.classfile.ConstantPool.CONSTANT_String_info) cpInfo).getString());
+                        break;
+                    case com.sun.tools.classfile.ConstantPool.CONSTANT_Class:
+                        ClassRef classRef = newClassRef();
+                        classRef.constantPool = constantPool;
+                        classRef.fullName = ((com.sun.tools.classfile.ConstantPool.CONSTANT_Class_info) cpInfo).getName();
+                        classRef.jvmClass = JavaVirtualMachine.getAppClassLoader().loadClass("", classRef.fullName);
+                        break;
+                }
+            }
+
+        }
+    }
+
+    private ClassRef newClassRef() {
+        return new ClassRef();
     }
 
     abstract JvmClass<?> findClass(String classPath, String className);

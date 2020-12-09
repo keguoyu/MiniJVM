@@ -25,6 +25,11 @@ public class MethodArea {
         return classCache.get(fullName);
     }
 
+
+    public ConstantPool getConstantPool() {
+        return constantPool;
+    }
+
     public void toRuntimeConstantPool(JvmClass<?> jvmClass) {
         final ClassFile classFile = jvmClass.classFile;
         final com.sun.tools.classfile.ConstantPool pool = classFile.constant_pool;

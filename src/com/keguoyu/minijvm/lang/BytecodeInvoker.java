@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class BytecodeInvoker {
 
-    public void invoke(JvmMethod jvmMethod) {
+    public static void invoke(JvmMethod jvmMethod) {
         final Method method = jvmMethod.method;
         Code_attribute codeAttribute = (Code_attribute) method.attributes.get("Code");
         byte[] code = codeAttribute.code;
@@ -25,7 +25,7 @@ public class BytecodeInvoker {
         return String.format("0x%02x", b & 0xff);
     }
 
-    private void loop(JvmThread thread, byte[] code) {
+    private static void loop(JvmThread thread, byte[] code) {
         StackFrame frame = thread.current();
         BytecodeReader reader = new BytecodeReader();
         byte opcode;

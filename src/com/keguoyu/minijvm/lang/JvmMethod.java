@@ -1,5 +1,6 @@
 package com.keguoyu.minijvm.lang;
 
+import com.keguoyu.minijvm.operation.OperationFactory;
 import com.sun.tools.classfile.Method;
 
 public class JvmMethod {
@@ -10,4 +11,13 @@ public class JvmMethod {
         this.method = method;
         this.jvmClass = jvmClass;
     }
+
+    /**
+     * 有可能直接调用反射
+     */
+    public void invoke() {
+        OperationFactory.checkInitOrNot();
+        BytecodeInvoker.invoke(this);
+    }
+
 }

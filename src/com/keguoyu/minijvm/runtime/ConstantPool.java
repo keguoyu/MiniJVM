@@ -10,7 +10,7 @@ public class ConstantPool {
         if (constants == null) {
             constants = new Object[newSize];
         } else {
-            constants = Arrays.copyOf(constants, newSize);
+            constants = Arrays.copyOf(constants, newSize + constants.length);
         }
     }
 
@@ -23,7 +23,11 @@ public class ConstantPool {
     }
 
     public Object get(int position) {
-        return constants[position];
+        Object constant = constants[position];
+        if (constant != null) {
+            return constant;
+        }
+        throw new RuntimeException("Can't find constant at " + position);
     }
 
 }

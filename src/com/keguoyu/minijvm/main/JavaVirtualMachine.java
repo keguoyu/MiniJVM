@@ -39,11 +39,11 @@ public final class JavaVirtualMachine {
     }
 
     public void start(String classPath, String className) {
+        OperationFactory.checkInitOrNot();
         JvmClass<?> jvmClass = appClassLoader.loadClass(classPath, className);
         JvmMethod main = jvmClass.getMethod("main",
                 "([Ljava/lang/String;)V");
-        OperationFactory.initOperation();
-        new BytecodeInvoker().invoke(main);
+        main.invoke();
     }
 
 }
