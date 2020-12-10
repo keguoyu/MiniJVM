@@ -67,6 +67,7 @@ public class BootPathJvmClassLoader extends JvmClassLoader {
     @Override
     JvmClass<?> findClass(String classPath, String className) {
         ClassFile classFile = null;
+        String newClassName = tryAppendClassSub(className);
         for (File file : allFiles) {
             String absolutePath = file.getAbsolutePath();
             if (absolutePath.endsWith(".jar") || absolutePath.endsWith(".zip")) {
@@ -75,7 +76,7 @@ public class BootPathJvmClassLoader extends JvmClassLoader {
                     Enumeration<? extends ZipEntry> entries = zipFile.entries();
                     while (entries.hasMoreElements()) {
                         ZipEntry entry = entries.nextElement();
-                        if (entry.getName().equals(className)) {
+                        if (entry.getName().equals(newClassName)) {
                             InputStream stream = zipFile.getInputStream(entry);
                             classFile = ClassFile.read(stream);
                             System.out.printf("Find class %1s in bootPath success\n", className);

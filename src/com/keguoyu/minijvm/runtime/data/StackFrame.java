@@ -1,5 +1,7 @@
 package com.keguoyu.minijvm.runtime.data;
 
+import com.keguoyu.minijvm.lang.JvmMethod;
+
 /**
  * 栈帧
  */
@@ -8,6 +10,7 @@ public class StackFrame {
     public LocalVariable localVariable;
     public OperationStack operationStack;
     public JvmThread jvmThread;
+    public JvmMethod jvmMethod;
 
     private int nextPC;
 
@@ -19,9 +22,10 @@ public class StackFrame {
         return nextPC;
     }
 
-    public StackFrame(int maxLocals, int maxOperands) {
+    public StackFrame(int maxLocals, int maxOperands, JvmMethod jvmMethod) {
         localVariable = new LocalVariable(maxLocals);
         operationStack = new OperationStack(maxOperands);
+        this.jvmMethod = jvmMethod;
     }
 
     public void attachThread(JvmThread jvmThread) {

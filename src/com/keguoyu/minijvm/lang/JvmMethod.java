@@ -12,9 +12,6 @@ public class JvmMethod {
         this.jvmClass = jvmClass;
     }
 
-    /**
-     * 有可能直接调用反射
-     */
     public void invoke() {
         OperationFactory.checkInitOrNot();
         BytecodeInvoker.invoke(this);

@@ -1,10 +1,10 @@
-package com.keguoyu.minijvm.pojo.ref;
+package com.keguoyu.minijvm.data.ref;
 
 import com.keguoyu.minijvm.lang.JvmClass;
-import com.keguoyu.minijvm.runtime.ConstantPool;
+import com.keguoyu.minijvm.runtime.SingleConstantPool;
 
 public class SymbolicRef {
-    public ConstantPool constantPool;
+    public SingleConstantPool singleConstantPool;
     public JvmClass<?> jvmClass;
     public String fullName;
 

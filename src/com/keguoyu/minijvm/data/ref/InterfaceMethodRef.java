@@ -1,6 +1,6 @@
-package com.keguoyu.minijvm.pojo.ref;
+package com.keguoyu.minijvm.data.ref;
 
-import com.keguoyu.minijvm.pojo.Method;
+import com.keguoyu.minijvm.data.Method;
 
 public class InterfaceMethodRef extends MemberRef {
     public Method method;

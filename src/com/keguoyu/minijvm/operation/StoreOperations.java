@@ -546,7 +546,6 @@ public enum StoreOperations implements Operation {
         frame.localVariable.set(index, val);
     }
 
-
     @Override
     public void fetchOperands(BytecodeReader reader) {
         //do nothing

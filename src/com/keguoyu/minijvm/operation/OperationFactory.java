@@ -29,6 +29,10 @@ public class OperationFactory {
         operations.addAll(Arrays.asList(SwapOperations.values()));
         operations.addAll(Arrays.asList(GotoOperations.values()));
         operations.addAll(Arrays.asList(ReturnOperations.values()));
+        operations.addAll(Arrays.asList(LdcOperations.values()));
+        operations.addAll(Arrays.asList(NewOperations.values()));
+        operations.addAll(Arrays.asList(StaticOperations.values()));
+        operations.addAll(Arrays.asList(FieldOperations.values()));
         for (Operation operation : operations) {
             map.put(operation.getCode(), operation);
         }

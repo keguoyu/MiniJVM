@@ -1,13 +1,18 @@
 package com.keguoyu.minijvm.lang;
 
+import com.keguoyu.minijvm.runtime.SingleConstantPool;
 
 import com.keguoyu.minijvm.main.JavaVirtualMachine;
-import com.keguoyu.minijvm.pojo.ref.ClassRef;
-import com.keguoyu.minijvm.runtime.ConstantPool;
+import com.keguoyu.minijvm.data.ref.ClassReference;
+import com.keguoyu.minijvm.data.ref.FieldReference;
+import com.keguoyu.minijvm.data.ref.InterfaceMethodRef;
+import com.keguoyu.minijvm.data.ref.MethodRef;
 import com.keguoyu.minijvm.runtime.MethodArea;
 import com.keguoyu.minijvm.utils.Debugger;
-import com.sun.tools.classfile.ClassFile;
+import com.sun.tools.classfile.ConstantPool;
 import com.sun.tools.classfile.ConstantPoolException;
+import com.sun.tools.classfile.ClassFile;
+
 
 /**
  * 类加载器
@@ -49,16 +54,40 @@ public abstract class JvmClassLoader {
      */
     public JvmClass<?> defineClass(ClassFile classFile) {
         MethodArea methodArea = JavaVirtualMachine.getMethodArea();
-        JvmClass<?> jvmClass = new JvmClass<>(classFile, this);
         String className = "";
         try {
             className = classFile.getName();
-            transformRuntimeConstantPool(jvmClass);
         } catch (ConstantPoolException e) {
             Debugger.printlnError(e);
         }
+        JvmClass<?> jvmClass = new JvmClass<>(classFile, className, this);
+        methodArea.put(className, jvmClass);
+        transformRuntimeConstantPool(jvmClass);
         verify(className, jvmClass);
+        loadSuperClass(jvmClass);
+        loadSuperInterfaces(jvmClass);
         return jvmClass;
+    }
+
+    private void loadSuperClass(JvmClass<?> jvmClass) {
+        try {
+            String superclassName = jvmClass.classFile.getSuperclassName();
+            jvmClass.superClass = JavaVirtualMachine.getAppClassLoader().loadClass("", superclassName);
+        } catch (ConstantPoolException e) {
+            Debugger.printlnError(e);
+        }
+    }
+
+    private void loadSuperInterfaces(JvmClass<?> jvmClass) {
+        int[] interfaces = jvmClass.classFile.interfaces;
+        for (int i = 0 ;i < interfaces.length; i++) {
+            try {
+                String interfaceName = jvmClass.classFile.getInterfaceName(i);
+                jvmClass.interfaces.add(JavaVirtualMachine.getAppClassLoader().loadClass("", interfaceName));
+            } catch (ConstantPoolException e) {
+                Debugger.printlnError(e);
+            }
+        }
     }
 
     /**
@@ -68,45 +97,98 @@ public abstract class JvmClassLoader {
         Debugger.printf("verify %1s success\n", className);
     }
 
-    private void transformRuntimeConstantPool(JvmClass<?> jvmClass) throws ConstantPoolException {
+    private void transformRuntimeConstantPool(JvmClass<?> jvmClass) {
         final MethodArea methodArea = JavaVirtualMachine.getMethodArea();
-        final ConstantPool constantPool = methodArea.getConstantPool();
-        final int originIndex = constantPool.getOriginSize();
-        constantPool.makeConstants(jvmClass.classFile.constant_pool.size());
-        for (int i = 0; i < jvmClass.classFile.constant_pool.size(); i++) {
-            com.sun.tools.classfile.ConstantPool.CPInfo cpInfo = jvmClass.classFile.constant_pool.get(i);
+
+        ConstantPool classFileConstantsPool = jvmClass.classFile.constant_pool;
+        final SingleConstantPool singleConstantPool = methodArea.getConstantPool(jvmClass, classFileConstantsPool.size());
+        classFileConstantsPool.size();
+        for (int i = 1; i < jvmClass.classFile.constant_pool.size(); i++) {
+            ConstantPool.CPInfo cpInfo;
+            try {
+                cpInfo = jvmClass.classFile.constant_pool.get(i);
             if (cpInfo != null) {
-                int newPosition = originIndex + i;
                 switch (cpInfo.getTag()) {
-                    case com.sun.tools.classfile.ConstantPool.CONSTANT_Integer:
-                        constantPool.set(newPosition, ((com.sun.tools.classfile.ConstantPool.CONSTANT_Integer_info) cpInfo).value);
+                    case ConstantPool.CONSTANT_Integer:
+                        singleConstantPool.set(i, ((ConstantPool.CONSTANT_Integer_info) cpInfo).value);
                         break;
-                    case com.sun.tools.classfile.ConstantPool.CONSTANT_Float:
-                        constantPool.set(newPosition, ((com.sun.tools.classfile.ConstantPool.CONSTANT_Float_info) cpInfo).value);
+                    case ConstantPool.CONSTANT_Float:
+                        singleConstantPool.set(i, ((ConstantPool.CONSTANT_Float_info) cpInfo).value);
                         break;
-                    case com.sun.tools.classfile.ConstantPool.CONSTANT_Long:
-                        constantPool.set(newPosition, ((com.sun.tools.classfile.ConstantPool.CONSTANT_Long_info) cpInfo).value);
+                    case ConstantPool.CONSTANT_Long:
+                        singleConstantPool.set(i, ((ConstantPool.CONSTANT_Long_info) cpInfo).value);
                         break;
-                    case com.sun.tools.classfile.ConstantPool.CONSTANT_Double:
-                        constantPool.set(newPosition, ((com.sun.tools.classfile.ConstantPool.CONSTANT_Double_info) cpInfo).value);
+                    case ConstantPool.CONSTANT_Double:
+                        singleConstantPool.set(i, ((ConstantPool.CONSTANT_Double_info) cpInfo).value);
                         break;
-                    case com.sun.tools.classfile.ConstantPool.CONSTANT_String:
-                        constantPool.set(newPosition, ((com.sun.tools.classfile.ConstantPool.CONSTANT_String_info) cpInfo).getString());
+                    case ConstantPool.CONSTANT_String:
+                        singleConstantPool.set(i, ((ConstantPool.CONSTANT_String_info) cpInfo).getString());
                         break;
-                    case com.sun.tools.classfile.ConstantPool.CONSTANT_Class:
-                        ClassRef classRef = newClassRef();
-                        classRef.constantPool = constantPool;
-                        classRef.fullName = ((com.sun.tools.classfile.ConstantPool.CONSTANT_Class_info) cpInfo).getName();
-                        classRef.jvmClass = JavaVirtualMachine.getAppClassLoader().loadClass("", classRef.fullName);
+                    case ConstantPool.CONSTANT_Class:
+                        ClassReference classReference = newClassRef();
+                        classReference.constantPool = singleConstantPool;
+                        classReference.fullName = ((ConstantPool.CONSTANT_Class_info) cpInfo).getName();
+                        singleConstantPool.set(i, classReference);
+                        break;
+                    case ConstantPool.CONSTANT_Fieldref:
+                        ConstantPool.CONSTANT_Fieldref_info fieldrefInfo = (ConstantPool.CONSTANT_Fieldref_info) cpInfo;
+                        ConstantPool.CONSTANT_Class_info fieldRefClassInfo =
+                                classFileConstantsPool.getClassInfo(fieldrefInfo.class_index);
+                        ConstantPool.CONSTANT_NameAndType_info fieldRefNameAndTypeInfo =
+                                classFileConstantsPool.getNameAndTypeInfo(fieldrefInfo.name_and_type_index);
+                        FieldReference fieldReference = newFieldRef(fieldRefClassInfo.getName(),
+                                fieldRefNameAndTypeInfo.getType(), fieldRefNameAndTypeInfo.getName());
+                        fieldReference.jvmClass = jvmClass;
+                        fieldReference.constantPool = singleConstantPool;
+                        singleConstantPool.set(i, fieldReference);
+                        break;
+                    case ConstantPool.CONSTANT_Methodref:
+                        ConstantPool.CONSTANT_Methodref_info methodrefInfo = (ConstantPool.CONSTANT_Methodref_info) cpInfo;
+                        ConstantPool.CONSTANT_Class_info methodRefClsInfo = classFileConstantsPool.getClassInfo(methodrefInfo.class_index);
+                        ConstantPool.CONSTANT_NameAndType_info methodRefNameAndTypeInfo =
+                                classFileConstantsPool.getNameAndTypeInfo(methodrefInfo.name_and_type_index);
+                        MethodRef methodRef = newMethodRef(methodRefClsInfo.getName(),
+                                methodRefNameAndTypeInfo.getType(), methodRefNameAndTypeInfo.getName());
+                        singleConstantPool.set(i, methodRef);
+                        break;
+                    case ConstantPool.CONSTANT_InterfaceMethodref:
+                        ConstantPool.CONSTANT_InterfaceMethodref_info interfaceMethodrefInfo =
+                                (ConstantPool.CONSTANT_InterfaceMethodref_info) cpInfo;
+                        InterfaceMethodRef interfaceMethodRef = newInterfaceMethodRef();
+                        interfaceMethodRef.className = interfaceMethodrefInfo.getClassName();
+                        interfaceMethodRef.methodName = interfaceMethodrefInfo.getNameAndTypeInfo().getName();
+                        interfaceMethodRef.type = interfaceMethodrefInfo.getNameAndTypeInfo().getType();
+                        singleConstantPool.set(i, interfaceMethodRef);
                         break;
                 }
+            }  } catch (ConstantPoolException invalidIndex) {
+                Debugger.printlnError(invalidIndex);
             }
-
         }
     }
 
-    private ClassRef newClassRef() {
-        return new ClassRef();
+    private ClassReference newClassRef() {
+        return new ClassReference();
+    }
+
+    private FieldReference newFieldRef(String className, String type, String fieldName) {
+        return new FieldReference(className, type, fieldName);
+    }
+
+    private MethodRef newMethodRef(String className, String type, String methodName) {
+        return new MethodRef(className, type, methodName);
+    }
+
+    private InterfaceMethodRef newInterfaceMethodRef() {
+        return new InterfaceMethodRef();
+    }
+
+    protected String tryAppendClassSub(String className) {
+        String newClassName = className;
+        if (!newClassName.endsWith(".class")) {
+             newClassName= className  + ".class";
+        }
+        return newClassName;
     }
 
     abstract JvmClass<?> findClass(String classPath, String className);

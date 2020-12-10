@@ -1,5 +1,6 @@
 package com.keguoyu.minijvm.lang;
 
+import com.keguoyu.minijvm.utils.Debugger;
 import com.sun.tools.classfile.ClassFile;
 import com.sun.tools.classfile.ConstantPoolException;
 
@@ -21,10 +22,11 @@ public class UserPathJvmClassLoader extends JvmClassLoader {
     @Override
     JvmClass<?> findClass(String classPath, String className) {
         ClassFile classFile = null;
+        String newClassName = tryAppendClassSub(className);
         if (classPath.endsWith(".zip") || classPath.endsWith(".jar")) {
-            classFile = tryGetFromZip(classPath, className);
+            classFile = tryGetFromZip(classPath, newClassName);
         } else {
-            classFile = tryGetFromFolder(classPath, className);
+            classFile = tryGetFromFolder(classPath, newClassName);
         }
         if (classFile != null) {
             System.out.printf("Find class %1s in userPath success\n", className);
@@ -45,7 +47,7 @@ public class UserPathJvmClassLoader extends JvmClassLoader {
                 }
             }
         } catch (IOException | ConstantPoolException e) {
-            e.printStackTrace();
+            Debugger.printlnError(e);
         }
         return null;
     }
@@ -57,7 +59,7 @@ public class UserPathJvmClassLoader extends JvmClassLoader {
         try {
             classFile = ClassFile.read(file);
         } catch (IOException | ConstantPoolException e) {
-            e.printStackTrace();
+            Debugger.printlnError(e);
         }
         return classFile;
     }

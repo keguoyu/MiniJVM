@@ -1,4 +1,4 @@
-package com.keguoyu.minijvm.pojo;
+package com.keguoyu.minijvm.data;
 
 /**
  * @author keguoyu

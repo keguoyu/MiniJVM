@@ -15,7 +15,7 @@ public class BytecodeInvoker {
         final Method method = jvmMethod.method;
         Code_attribute codeAttribute = (Code_attribute) method.attributes.get("Code");
         byte[] code = codeAttribute.code;
-        StackFrame stackFrame = new StackFrame(codeAttribute.max_locals, codeAttribute.max_stack);
+        StackFrame stackFrame = new StackFrame(codeAttribute.max_locals, codeAttribute.max_stack, jvmMethod);
         JvmThread thread = new JvmThread();
         thread.pushFrame(stackFrame);
         loop(thread, code);
@@ -26,6 +26,9 @@ public class BytecodeInvoker {
     }
 
     private static void loop(JvmThread thread, byte[] code) {
+        for (byte b: code) {
+            System.out.println(bytesToHexFun2(b));
+        }
         StackFrame frame = thread.current();
         BytecodeReader reader = new BytecodeReader();
         byte opcode;
@@ -38,7 +41,7 @@ public class BytecodeInvoker {
             opcode = reader.readByte();
 
             operation = OperationFactory.valueOf(bytesToHexFun2(opcode));
-            System.out.println(nextPC + "====>" + operation + "===>" + frame);
+            System.out.println(bytesToHexFun2(opcode) + "====>" + operation + "===>" + frame);
             operation.fetchOperands(reader);
             frame.setNextPC(reader.pc);
             operation.execute(frame);

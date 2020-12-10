@@ -1,7 +1,7 @@
 package com.keguoyu.minijvm;
 
 import com.keguoyu.minijvm.main.JavaVirtualMachine;
-import com.keguoyu.minijvm.pojo.Args;
+import com.keguoyu.minijvm.data.Args;
 
 /**
  * @author keguoyu

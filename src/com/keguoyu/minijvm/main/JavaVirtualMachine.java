@@ -2,15 +2,7 @@ package com.keguoyu.minijvm.main;
 
 import com.keguoyu.minijvm.lang.*;
 import com.keguoyu.minijvm.operation.OperationFactory;
-import com.keguoyu.minijvm.operation.StoreOperations;
 import com.keguoyu.minijvm.runtime.MethodArea;
-import com.sun.tools.classfile.Attribute;
-import com.sun.tools.classfile.Code_attribute;
-import sun.tools.java.Constants;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
 
 public final class JavaVirtualMachine {
     private static final JvmClassLoader appClassLoader;
@@ -41,6 +33,7 @@ public final class JavaVirtualMachine {
     public void start(String classPath, String className) {
         OperationFactory.checkInitOrNot();
         JvmClass<?> jvmClass = appClassLoader.loadClass(classPath, className);
+        jvmClass.callClinit();
         JvmMethod main = jvmClass.getMethod("main",
                 "([Ljava/lang/String;)V");
         main.invoke();
