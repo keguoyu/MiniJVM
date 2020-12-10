@@ -128,7 +128,9 @@ public class JvmClass<T> {
     public void callClinit() {
         if (!mClinitCalled) {
             JvmMethod clinit = getMethod("<clinit>", "()V");
-            BytecodeInvoker.invoke(clinit);
+            if (clinit != null) {
+                BytecodeInvoker.invoke(clinit);
+            }
             mClinitCalled = true;
         }
     }
