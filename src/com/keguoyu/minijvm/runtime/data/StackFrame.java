@@ -22,10 +22,11 @@ public class StackFrame {
         return nextPC;
     }
 
-    public StackFrame(int maxLocals, int maxOperands, JvmMethod jvmMethod) {
-        localVariable = new LocalVariable(maxLocals);
-        operationStack = new OperationStack(maxOperands);
+    public StackFrame(JvmMethod jvmMethod) {
+        localVariable = new LocalVariable(jvmMethod.maxLocalsVarsSize);
+        operationStack = new OperationStack(jvmMethod.maxOperandsSize);
         this.jvmMethod = jvmMethod;
+
     }
 
     public void attachThread(JvmThread jvmThread) {

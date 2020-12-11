@@ -149,6 +149,7 @@ public abstract class JvmClassLoader {
                                 classFileConstantsPool.getNameAndTypeInfo(methodrefInfo.name_and_type_index);
                         MethodRef methodRef = newMethodRef(methodRefClsInfo.getName(),
                                 methodRefNameAndTypeInfo.getType(), methodRefNameAndTypeInfo.getName());
+                        methodRef.constantPool = singleConstantPool;
                         singleConstantPool.set(i, methodRef);
                         break;
                     case ConstantPool.CONSTANT_InterfaceMethodref:

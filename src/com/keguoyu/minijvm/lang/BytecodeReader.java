@@ -31,6 +31,20 @@ public class BytecodeReader {
         return byteBuffer.getInt(0);
     }
 
+    public int[] readInts(int number) {
+        int[] ints = new int[number];
+        for (int i = 0; i< ints.length; i++) {
+            ints[i] = readInt();
+        }
+        return ints;
+    }
+
+    public void skipPadding() {
+        while (pc % 4 != 0) {
+            readByte();
+        }
+    }
+
     public void reset(byte[] code, int pc) {
         this.code = code;
         this.pc = pc;

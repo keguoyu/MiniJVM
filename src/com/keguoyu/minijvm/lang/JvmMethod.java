@@ -1,20 +1,87 @@
 package com.keguoyu.minijvm.lang;
 
 import com.keguoyu.minijvm.operation.OperationFactory;
+import com.sun.tools.classfile.Code_attribute;
+import com.sun.tools.classfile.ConstantPoolException;
+import com.sun.tools.classfile.Descriptor;
 import com.sun.tools.classfile.Method;
 
 public class JvmMethod {
     public final Method method;
     public final JvmClass<?> jvmClass;
+    public final int maxLocalsVarsSize;
+    public final int maxOperandsSize;
+    private final Code_attribute codeAttribute;
+
+    private String parameterTypes = "";
+    private String returnType = "";
+
+    //方法的参数个数
+    private int argsCount = 0;
 
     public JvmMethod(Method method, JvmClass<?> jvmClass) {
         this.method = method;
         this.jvmClass = jvmClass;
+        codeAttribute = (Code_attribute) method.attributes.get("Code");
+        maxLocalsVarsSize = codeAttribute == null ? 0 : codeAttribute.max_locals;
+        maxOperandsSize = codeAttribute == null ? 0 : codeAttribute.max_stack;
+        parseMethodInfo();
+    }
+
+    private void parseMethodInfo() {
+        Descriptor descriptor = method.descriptor;
+        try {
+            argsCount = descriptor.getParameterCount(jvmClass.classFile.constant_pool);
+            parameterTypes = descriptor.getParameterTypes(jvmClass.classFile.constant_pool);
+            returnType = descriptor.getReturnType(jvmClass.classFile.constant_pool);
+        } catch (ConstantPoolException | Descriptor.InvalidDescriptor e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getArgsCount() {
+        return argsCount;
+    }
+
+    public String getParameterTypes() {
+        return parameterTypes;
+    }
+
+    public String getReturnType() {
+        return returnType;
+    }
+
+    public byte[] getCode() {
+        return codeAttribute.code;
     }
 
     public void invoke() {
         OperationFactory.checkInitOrNot();
         BytecodeInvoker.invoke(this);
+    }
+
+    public String getMethodName() {
+        return "";
+    }
+
+    public String getName() {
+        String name = "";
+        try {
+            name = method.getName(jvmClass.classFile.constant_pool);
+        } catch (ConstantPoolException e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
+
+    public String getType() {
+        String type = "";
+        try {
+            type = method.descriptor.getFieldType(jvmClass.classFile.constant_pool);
+        } catch (ConstantPoolException | Descriptor.InvalidDescriptor e) {
+            e.printStackTrace();
+        }
+        return type;
     }
 
 }

@@ -8,24 +8,26 @@ import com.keguoyu.minijvm.runtime.SingleConstantPool;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * 字段引用
+ */
 public class FieldReference {
     public SingleConstantPool constantPool;
     public JvmClass<?> jvmClass;
     private JvmField jvmField;
-    private String className;
-    private String type;
-    private String fieldName;
-
+    private final String className;
+    private final String type;
+    private final String fieldName;
 
     public FieldReference(String className, String type, String fieldName) {
         this.className = className;
-        this.type = parseType(type.charAt(0));
+        this.type = parseType(type);
         this.fieldName = fieldName;
     }
 
-    private String parseType(char type) {
+    private String parseType(String type) {
         String fullType = "";
-        switch (type) {
+        switch (type.charAt(0)) {
             case 'Z':
             case 'B':
             case 'C':
@@ -42,6 +44,8 @@ public class FieldReference {
             case 'D':
                 fullType = "double";
                 break;
+            default:
+                fullType = type;
         }
         return fullType;
     }
@@ -77,10 +81,13 @@ public class FieldReference {
 
     private JvmField findFieldByTraversal(Collection<JvmField> fields) {
         for(JvmField rawField: fields) {
-            System.out.println("name " + rawField.getName() + " type " + rawField.getType() );
-            if (rawField.getName().equals(fieldName)
-                    && rawField.getType().equals(type)
-                    && rawField.jvmClass.getClassName().equals(className)) {
+            System.out.println("name " + rawField.getName() + " type " + rawField.getType() + "  " + type);
+
+//            if (rawField.getName().equals(fieldName)
+//                    && (rawField.getType().equals(type.replace("/", ".")) || ("L"+rawField.getType().replace("/", ".")).equals(type))
+//                    && rawField.jvmClass.getClassName().equals(className)) {
+            if (fieldName.equals(rawField.getName()) && (type.replace("/", ".")).contains(rawField.getType())) {
+                System.out.println("find " + fieldName);
                 return rawField;
             }
         }

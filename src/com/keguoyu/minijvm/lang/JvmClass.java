@@ -20,7 +20,7 @@ public class JvmClass<T> {
 
     private Object[] instanceFields = null;
 
-    public boolean mClinitCalled = false;
+    private boolean mClinitCalled = false;
 
     //当创建JvmClass的时候 类的所有信息都必要明确
     public JvmClass(ClassFile classFile, String className, JvmClassLoader jvmClassLoader) {
@@ -110,6 +110,32 @@ public class JvmClass<T> {
         return isPublic() || getPackageName().equals(another.getPackageName());
     }
 
+    public boolean isAssignFrom(JvmClass<?> another) {
+        return this == another || isSubClassOf(another) || isImplementsOf(another);
+    }
+
+    public boolean isSubClassOf(JvmClass<?> another) {
+        return superClass != null && superClass == another;
+    }
+
+    public boolean isImplementsOf(JvmClass<?> another) {
+        for (JvmClass<?> jvmClass : interfaces) {
+            if (jvmClass == another || jvmClass.isSubInterfaceOf(another)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isSubInterfaceOf(JvmClass<?> another) {
+        for (JvmClass<?> jvmClass : interfaces) {
+            if (jvmClass == another || jvmClass.isSubInterfaceOf(another)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isInterface() {
         return classFile.access_flags.is(AccessFlags.ACC_INTERFACE);
     }
@@ -118,21 +144,32 @@ public class JvmClass<T> {
         return classFile.access_flags.is(AccessFlags.ACC_ABSTRACT);
     }
 
-    public Object newInstance() {
-        return new JvmObject(instanceFields.length);
+    public JvmObject newInstance() {
+        return new JvmObject(this, instanceFields.length);
     }
 
     /**
      * 执行Class的clinit方法
+     *
+     * 执行new指令创建类实例，但类还没有被初始化。
+     * ·执行putstatic、getstatic指令存取类的静态变量，但声明该字段
+     * 的类还没有被初始化。
+     * ·执行invokestatic调用类的静态方法，但声明该方法的类还没
+     * 有被初始化。
+     * ·当初始化一个类时，如果类的超类还没有被初始化，要先初始化类的超类。
+     * ·执行某些反射操作时。
+     *
      */
     public void callClinit() {
-        if (!mClinitCalled) {
-            JvmMethod clinit = getMethod("<clinit>", "()V");
-            if (clinit != null) {
-                BytecodeInvoker.invoke(clinit);
-            }
-            mClinitCalled = true;
+        JvmMethod clinit = getMethod("<clinit>", "()V");
+        if (clinit != null) {
+            BytecodeInvoker.invoke(clinit);
         }
+        mClinitCalled = true;
+    }
+
+    public boolean isClinitCalled() {
+        return mClinitCalled;
     }
 
 }

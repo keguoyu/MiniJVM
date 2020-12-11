@@ -4,21 +4,16 @@ import com.keguoyu.minijvm.operation.Operation;
 import com.keguoyu.minijvm.operation.OperationFactory;
 import com.keguoyu.minijvm.runtime.data.JvmThread;
 import com.keguoyu.minijvm.runtime.data.StackFrame;
-import com.sun.tools.classfile.Code_attribute;
-import com.sun.tools.classfile.Method;
 
 import java.util.Arrays;
 
 public class BytecodeInvoker {
 
     public static void invoke(JvmMethod jvmMethod) {
-        final Method method = jvmMethod.method;
-        Code_attribute codeAttribute = (Code_attribute) method.attributes.get("Code");
-        byte[] code = codeAttribute.code;
-        StackFrame stackFrame = new StackFrame(codeAttribute.max_locals, codeAttribute.max_stack, jvmMethod);
+        StackFrame stackFrame = new StackFrame(jvmMethod);
         JvmThread thread = new JvmThread();
         thread.pushFrame(stackFrame);
-        loop(thread, code);
+        loop(thread, jvmMethod.getCode());
     }
 
     public static String bytesToHexFun2(byte b) {
@@ -41,7 +36,7 @@ public class BytecodeInvoker {
             opcode = reader.readByte();
 
             operation = OperationFactory.valueOf(bytesToHexFun2(opcode));
-            System.out.println(bytesToHexFun2(opcode) + "====>" + operation + "===>" + frame);
+            System.out.println(nextPC + "====>" + opcode +"====>" + bytesToHexFun2(opcode) + "====>" + operation + "===>" + frame);
             operation.fetchOperands(reader);
             frame.setNextPC(reader.pc);
             operation.execute(frame);

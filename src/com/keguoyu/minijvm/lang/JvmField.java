@@ -8,14 +8,17 @@ import com.sun.tools.classfile.Field;
 public class JvmField {
 
     public final JvmClass<?> jvmClass;
-
     public final Field field;
 
+    private String fieldName;
+    private String fieldType;
     private int fieldIndex;
 
     public JvmField(JvmClass<?> jvmClass, Field field) {
         this.jvmClass = jvmClass;
         this.field = field;
+        initFieldName();
+        initType();
     }
 
     public void setFieldIndex(int fieldIndex) {
@@ -31,23 +34,31 @@ public class JvmField {
     }
 
     public String getName() {
-        String name = "";
-        try {
-            name = field.getName(jvmClass.classFile.constant_pool);
-        } catch (ConstantPoolException e) {
-            e.printStackTrace();
-        }
-        return name;
+        return fieldName;
     }
 
     public String getType() {
+        return fieldType;
+    }
+
+    private void initFieldName() {
+        String fieldName = "";
+        try {
+            fieldName = field.getName(jvmClass.classFile.constant_pool);
+        } catch (ConstantPoolException e) {
+            e.printStackTrace();
+        }
+        this.fieldName = fieldName;
+    }
+
+    public void initType() {
         String type = "";
         try {
             type = field.descriptor.getFieldType(jvmClass.classFile.constant_pool);
         } catch (ConstantPoolException | Descriptor.InvalidDescriptor e) {
             e.printStackTrace();
         }
-        return type;
+        this.fieldType = type;
     }
 
     public boolean isPublic() {

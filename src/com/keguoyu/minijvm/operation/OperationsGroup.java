@@ -2,9 +2,8 @@ package com.keguoyu.minijvm.operation;
 
 import com.keguoyu.minijvm.data.ref.ClassReference;
 import com.keguoyu.minijvm.data.ref.FieldReference;
-import com.keguoyu.minijvm.lang.BytecodeReader;
-import com.keguoyu.minijvm.lang.JvmClass;
-import com.keguoyu.minijvm.lang.JvmField;
+import com.keguoyu.minijvm.data.ref.MethodRef;
+import com.keguoyu.minijvm.lang.*;
 import com.keguoyu.minijvm.main.JavaVirtualMachine;
 import com.keguoyu.minijvm.runtime.SingleConstantPool;
 import com.keguoyu.minijvm.runtime.data.StackFrame;
@@ -2805,6 +2804,156 @@ public enum OperationsGroup implements Operation {
         }
     },
 
+    //0xaa
+    TABLE_SWITCH {
+
+        int defaultOffset;
+        int low;
+        int high;
+        int[] offsets;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            reader.skipPadding();
+            defaultOffset = reader.readInt();
+            low = reader.readInt();
+            high = reader.readInt();
+            int switchCount = high - low + 1;
+            offsets = reader.readInts(switchCount);
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            int index = (int) frame.operationStack.pop();
+            int gotoOffset;
+            if (index >= low && index <= high) {
+                gotoOffset = index - low;
+            } else {
+                gotoOffset = defaultOffset;
+            }
+            go(frame, gotoOffset);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xaa";
+        }
+    },
+
+    //0xab
+    LOOK_UP_SWITCH {
+
+        int defaultOffset;
+        int npairs;
+        int[] matchCount;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            reader.skipPadding();
+            defaultOffset = reader.readInt();
+            npairs = reader.readInt();
+            matchCount = reader.readInts(npairs * 2);
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            int index = (int) frame.operationStack.pop();
+            int offset = defaultOffset;
+            for (int i = 0; i < npairs * 2; i += 2) {
+                if (matchCount[i] == index) {
+                    offset = matchCount[i + 1];
+                    break;
+                }
+            }
+            go(frame, offset);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xab";
+        }
+    },
+
+    //0xac
+    IRETURN {
+        @Override
+        public void execute(StackFrame frame) {
+            StackFrame currentFrame = frame.jvmThread.popFrame();
+            StackFrame callerFrame = frame.jvmThread.popFrame();
+            int v1 = (int) currentFrame.operationStack.pop();
+            callerFrame.operationStack.push(v1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xac";
+        }
+    },
+
+    //0xad
+    LRETURN {
+        @Override
+        public void execute(StackFrame frame) {
+            StackFrame currentFrame = frame.jvmThread.popFrame();
+            StackFrame callerFrame = frame.jvmThread.popFrame();
+            long v1 = (long) currentFrame.operationStack.pop();
+            callerFrame.operationStack.push(v1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xad";
+        }
+    },
+
+    //0xae
+    FRETURN {
+        @Override
+        public void execute(StackFrame frame) {
+            StackFrame currentFrame = frame.jvmThread.popFrame();
+            StackFrame callerFrame = frame.jvmThread.popFrame();
+            float v1 = (long) currentFrame.operationStack.pop();
+            callerFrame.operationStack.push(v1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xae";
+        }
+    },
+
+    //0xaf
+    DRETURN {
+        @Override
+        public void execute(StackFrame frame) {
+            StackFrame currentFrame = frame.jvmThread.popFrame();
+            StackFrame callerFrame = frame.jvmThread.popFrame();
+            double v1 = (double) currentFrame.operationStack.pop();
+            callerFrame.operationStack.push(v1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xaf";
+        }
+    },
+
+    //0xb0
+    ARETURN {
+        @Override
+        public void execute(StackFrame frame) {
+            StackFrame currentFrame = frame.jvmThread.popFrame();
+            StackFrame callerFrame = frame.jvmThread.popFrame();
+            Object v1 = currentFrame.operationStack.pop();
+            callerFrame.operationStack.push(v1);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xb0";
+        }
+    },
+
     //0xb1
     RETURN {
         @Override
@@ -2834,7 +2983,7 @@ public enum OperationsGroup implements Operation {
             SingleConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
             FieldReference fieldReference = (FieldReference) constantPool.get(index);
             JvmField jvmField = fieldReference.resolveField();
-            frame.operationStack.push(jvmClass.getStaticFieldVal(jvmField.getFieldIndex()));
+            frame.operationStack.push(jvmField.jvmClass.getStaticFieldVal(jvmField.getFieldIndex()));
         }
 
         @Override
@@ -2859,6 +3008,14 @@ public enum OperationsGroup implements Operation {
             SingleConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
             FieldReference fieldReference = (FieldReference) constantPool.get(index);
             JvmField jvmField = fieldReference.resolveField();
+            if (!jvmField.isStatic()) {
+                throw new RuntimeException("can't assign un static field in PUT_STATIC operation");
+            }
+            if (jvmField.isFinal()) {
+                if (!frame.jvmMethod.getMethodName().equals("<clinit>")) {
+                    throw new RuntimeException("can't assign un static field in non clinit method");
+                }
+            }
             jvmClass.setStaticFieldVal(jvmField.getFieldIndex(), frame.operationStack.pop());
         }
 
@@ -2893,7 +3050,7 @@ public enum OperationsGroup implements Operation {
         }
     },
 
-    //0x65
+    //0xb5
     PUT_FIELD {
 
         short index;
@@ -2905,7 +3062,6 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
-
             JvmClass<?> jvmClass = frame.jvmMethod.jvmClass;
             SingleConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
             FieldReference fieldReference = (FieldReference) constantPool.get(index);
@@ -2916,6 +3072,73 @@ public enum OperationsGroup implements Operation {
         @Override
         public String getCode() {
             return "0xb5";
+        }
+    },
+
+    //0xb6
+    INVOKE_VIRTUAL {
+
+        short offset;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            offset = reader.readShort();
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            System.out.println(frame.operationStack.pop());
+        }
+
+        @Override
+        public String getCode() {
+            return "0xb6";
+        }
+    },
+
+    //0xb7
+    INVOKE_SPECIAL {
+
+        short offset;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            offset = reader.readShort();
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            frame.operationStack.pop();
+        }
+
+        @Override
+        public String getCode() {
+            return "0xb7";
+        }
+    },
+
+    //0xb8
+    INVOKE_STATIC {
+
+        short offset;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            offset = reader.readShort();
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            SingleConstantPool constantPool =
+                    JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
+            MethodRef methodRef = (MethodRef) constantPool.get(offset);
+            methodRef.resolveMethod();
+            invokeMethod(frame, methodRef.jvmMethod);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xb8";
         }
     },
 
@@ -2937,7 +3160,7 @@ public enum OperationsGroup implements Operation {
             if (classReference.jvmClass.isInterface() || classReference.jvmClass.isAbstract()) {
                 throw new RuntimeException("Can't create instance of " + classReference.jvmClass);
             }
-            Object newInstance = classReference.jvmClass.newInstance();
+            JvmObject newInstance = classReference.jvmClass.newInstance();
             frame.operationStack.push(newInstance);
         }
 
@@ -2945,7 +3168,154 @@ public enum OperationsGroup implements Operation {
         public String getCode() {
             return "0xbb";
         }
-    };
+    },
+
+    //0xc0
+    CHECK_CAST {
+        short offset;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            offset = reader.readShort();
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            SingleConstantPool singleConstantPool =
+                    JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
+            JvmObject v1 = (JvmObject) frame.operationStack.pop();
+            if (v1 == null) {
+                frame.operationStack.push(0);
+                return;
+            }
+            ClassReference reference = (ClassReference) singleConstantPool.get(offset);
+            JvmClass<?> jvmClass = reference.loadClass();
+            if (!v1.jvmClass.isAssignFrom(jvmClass)) {
+                throw new RuntimeException("java.lang.ClassCastException");
+            }
+        }
+
+        @Override
+        public String getCode() {
+            return "0xc0";
+        }
+    },
+
+    //0xc1
+    INSTANCE_OF {
+
+        short offset;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            offset = reader.readShort();
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            SingleConstantPool singleConstantPool =
+                    JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
+            JvmObject v1 = (JvmObject) frame.operationStack.pop();
+            if (v1 == null) {
+                frame.operationStack.push(0);
+                return;
+            }
+            ClassReference reference = (ClassReference) singleConstantPool.get(offset);
+            JvmClass<?> jvmClass = reference.loadClass();
+            if (v1.jvmClass.isAssignFrom(jvmClass)) {
+                frame.operationStack.push(1);
+            } else {
+                frame.operationStack.push(0);
+            }
+        }
+
+        @Override
+        public String getCode() {
+            return "0xc1";
+        }
+    },
+
+    WIDE {
+        @Override
+        public void execute(StackFrame frame) {
+
+        }
+
+        @Override
+        public String getCode() {
+            return null;
+        }
+    },
+
+    //0xc6
+    IF_NULL {
+
+        short offset;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            offset = reader.readShort();
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            Object v1 = frame.operationStack.pop();
+            if (v1 == null) {
+                go(frame, offset);
+            }
+        }
+
+        @Override
+        public String getCode() {
+            return "0xc6";
+        }
+    },
+
+    //0xc7
+    IF_NONNULL {
+
+        short offset;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            offset = reader.readShort();
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            Object v1 = frame.operationStack.pop();
+            if (v1 != null) {
+                go(frame, offset);
+            }
+        }
+
+        @Override
+        public String getCode() {
+            return "0xc7";
+        }
+    },
+
+    //0xc8
+    GOTO_W {
+
+        int offset;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            offset = reader.readInt();
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            go(frame, offset);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xc8";
+        }
+    }
+    ;
 
     public void go(StackFrame frame, int offset) {
         int pc = frame.getJvmThread().getPc();
@@ -3014,6 +3384,15 @@ public enum OperationsGroup implements Operation {
                 .getConstantPool(stackFrame.jvmMethod.jvmClass);
         Object constant = constantPool.get(index);
         stackFrame.operationStack.push(constant);
+    }
+
+    public void invokeMethod(StackFrame currentFrame, JvmMethod invokeMethod) {
+        StackFrame invokeFrame = new StackFrame(invokeMethod);
+        currentFrame.jvmThread.pushFrame(invokeFrame);
+        int argsCount = invokeMethod.getArgsCount();
+        for (int i = 0;i < argsCount; i++) {
+            invokeFrame.localVariable.set(i, currentFrame.operationStack.pop());
+        }
     }
 
 }
