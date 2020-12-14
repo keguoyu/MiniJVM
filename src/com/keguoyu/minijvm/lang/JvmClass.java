@@ -1,5 +1,6 @@
 package com.keguoyu.minijvm.lang;
 
+import com.keguoyu.minijvm.runtime.SingleConstantPool;
 import com.sun.tools.classfile.*;
 
 import java.util.*;
@@ -16,11 +17,13 @@ public class JvmClass<T> {
     public final Map<Map.Entry<String, Descriptor>, JvmField> fields = new HashMap<>();
     public final Map<Map.Entry<String, String>, JvmMethod> methods = new HashMap<>();
 
-    private Object[] staticFields = null;
+    public Object[] staticFields = null;
 
-    private Object[] instanceFields = null;
+    public Object[] instanceFields = null;
 
     private boolean mClinitCalled = false;
+
+    public SingleConstantPool constantPool;
 
     //当创建JvmClass的时候 类的所有信息都必要明确
     public JvmClass(ClassFile classFile, String className, JvmClassLoader jvmClassLoader) {
@@ -36,26 +39,40 @@ public class JvmClass<T> {
                 e.printStackTrace();
             }
         }
-        int staticFieldCount = 0;
-        int instanceFieldCount = 0;
-        for (Field field: classFile.fields) {
-            try {
-                String name = field.getName(classFile.constant_pool);
-                JvmField jvmField = new JvmField(this, field);
-                if (field.access_flags.is(AccessFlags.ACC_STATIC)) {
-                    jvmField.setFieldIndex(staticFieldCount);
-                    staticFieldCount++;
+    }
+
+    public void initStaticVals() {
+        for (JvmField field: fields.values()) {
+            if (field.isStatic()) {
+                if (field.isFinal()) {
+                    int constantIndex = field.getConstantIndex();
+                    if (constantIndex >= 0) {
+                        Object o = constantPool.get(constantIndex);
+                        field.setValue(o);
+                    }
                 } else {
-                    jvmField.setFieldIndex(instanceFieldCount);
-                    instanceFieldCount++;
+                    String type = field.getType();
+                    switch (type) {
+                        case "int":
+                        case "byte":
+                        case "short":
+                            field.setValue(0);
+                            break;
+                        case "float":
+                            field.setValue(0.0f);
+                            break;
+                        case "long":
+                            field.setValue(0L);
+                            break;
+                        case "char":
+                            field.setValue(' ');
+                            break;
+                        default:
+                            field.setValue(null);
+                    }
                 }
-                fields.put(new AbstractMap.SimpleEntry<>(name, field.descriptor), jvmField);
-            } catch (ConstantPoolException e) {
-                e.printStackTrace();
             }
         }
-        staticFields = new Object[staticFieldCount];
-        instanceFields = new Object[instanceFieldCount];
     }
 
     public void setStaticFieldVal(int position, Object obj) {

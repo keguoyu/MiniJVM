@@ -10,6 +10,9 @@ import com.keguoyu.minijvm.runtime.data.StackFrame;
 
 import java.util.Objects;
 
+/**
+ * 所有指令集
+ */
 public enum OperationsGroup implements Operation {
 
     //0x00
@@ -2983,7 +2986,9 @@ public enum OperationsGroup implements Operation {
             SingleConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
             FieldReference fieldReference = (FieldReference) constantPool.get(index);
             JvmField jvmField = fieldReference.resolveField();
+            System.out.println("GETStatiC "+jvmField.jvmClass.getStaticFieldVal(jvmField.getFieldIndex()));
             frame.operationStack.push(jvmField.jvmClass.getStaticFieldVal(jvmField.getFieldIndex()));
+
         }
 
         @Override
@@ -3087,7 +3092,11 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
-            System.out.println(frame.operationStack.pop());
+            SingleConstantPool constantPool =
+                    JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
+            MethodRef methodRef = (MethodRef) constantPool.get(offset);
+            methodRef.resolveMethod();
+            invokeMethod(frame, methodRef.jvmMethod);
         }
 
         @Override

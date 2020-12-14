@@ -4,6 +4,9 @@ import com.keguoyu.minijvm.lang.*;
 import com.keguoyu.minijvm.operation.OperationFactory;
 import com.keguoyu.minijvm.runtime.MethodArea;
 
+/**
+ * 虚拟机实例
+ */
 public final class JavaVirtualMachine {
     private static final JvmClassLoader appClassLoader;
 

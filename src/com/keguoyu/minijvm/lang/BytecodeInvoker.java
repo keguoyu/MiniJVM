@@ -13,23 +13,24 @@ public class BytecodeInvoker {
         StackFrame stackFrame = new StackFrame(jvmMethod);
         JvmThread thread = new JvmThread();
         thread.pushFrame(stackFrame);
-        loop(thread, jvmMethod.getCode());
+        loop(thread);
     }
+
 
     public static String bytesToHexFun2(byte b) {
         return String.format("0x%02x", b & 0xff);
     }
 
-    private static void loop(JvmThread thread, byte[] code) {
-        for (byte b: code) {
-            System.out.println(bytesToHexFun2(b));
-        }
-        StackFrame frame = thread.current();
+    private static void loop(JvmThread thread) {
+
         BytecodeReader reader = new BytecodeReader();
         byte opcode;
         Operation operation;
-        System.out.println(Arrays.toString(code));
+
         do {
+            StackFrame frame = thread.current();
+            System.out.println(frame.jvmMethod.getMethodName());
+            byte[] code = frame.jvmMethod.getCode();
             int nextPC = frame.getNextPC();
             thread.setPc(nextPC);
             reader.reset(code, nextPC);

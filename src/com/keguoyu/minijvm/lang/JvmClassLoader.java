@@ -9,9 +9,10 @@ import com.keguoyu.minijvm.data.ref.InterfaceMethodRef;
 import com.keguoyu.minijvm.data.ref.MethodRef;
 import com.keguoyu.minijvm.runtime.MethodArea;
 import com.keguoyu.minijvm.utils.Debugger;
-import com.sun.tools.classfile.ConstantPool;
-import com.sun.tools.classfile.ConstantPoolException;
-import com.sun.tools.classfile.ClassFile;
+import com.sun.tools.classfile.*;
+
+import java.util.AbstractMap;
+import java.util.Map;
 
 
 /**
@@ -64,6 +65,7 @@ public abstract class JvmClassLoader {
         methodArea.put(className, jvmClass);
         transformRuntimeConstantPool(jvmClass);
         verify(className, jvmClass);
+        prepare(jvmClass);
         loadSuperClass(jvmClass);
         loadSuperInterfaces(jvmClass);
         return jvmClass;
@@ -95,6 +97,32 @@ public abstract class JvmClassLoader {
      */
     private void verify(String className, JvmClass<?> jvmClass) {
         Debugger.printf("verify %1s success\n", className);
+    }
+
+    private void prepare(JvmClass<?> jvmClass) {
+        int staticFieldCount = 0;
+        int instanceFieldCount = 0;
+        for (Field field: jvmClass.classFile.fields) {
+            try {
+                ConstantValue_attribute attribute = (ConstantValue_attribute) field.attributes.get("ConstantValue");
+
+                String name = field.getName(jvmClass.classFile.constant_pool);
+                JvmField jvmField = new JvmField(jvmClass, field);
+                if (field.access_flags.is(AccessFlags.ACC_STATIC)) {
+                    jvmField.setFieldIndex(staticFieldCount);
+                    staticFieldCount++;
+                } else {
+                    jvmField.setFieldIndex(instanceFieldCount);
+                    instanceFieldCount++;
+                }
+                jvmClass.fields.put(new AbstractMap.SimpleEntry<>(name, field.descriptor), jvmField);
+            } catch (ConstantPoolException e) {
+                e.printStackTrace();
+            }
+        }
+        jvmClass.staticFields = new Object[staticFieldCount];
+        jvmClass.instanceFields = new Object[instanceFieldCount];
+        jvmClass.initStaticVals();
     }
 
     private void transformRuntimeConstantPool(JvmClass<?> jvmClass) {

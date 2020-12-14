@@ -16,6 +16,8 @@ public class JvmMethod {
     private String parameterTypes = "";
     private String returnType = "";
 
+    private String methodName = "";
+
     //方法的参数个数
     private int argsCount = 0;
 
@@ -34,6 +36,7 @@ public class JvmMethod {
             argsCount = descriptor.getParameterCount(jvmClass.classFile.constant_pool);
             parameterTypes = descriptor.getParameterTypes(jvmClass.classFile.constant_pool);
             returnType = descriptor.getReturnType(jvmClass.classFile.constant_pool);
+            methodName = method.getName(jvmClass.classFile.constant_pool);
         } catch (ConstantPoolException | Descriptor.InvalidDescriptor e) {
             e.printStackTrace();
         }
@@ -61,7 +64,7 @@ public class JvmMethod {
     }
 
     public String getMethodName() {
-        return "";
+        return methodName;
     }
 
     public String getName() {

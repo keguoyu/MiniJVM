@@ -17,8 +17,19 @@ public class MethodRef {
 
     public MethodRef(String className, String type, String methodName) {
         this.className = className;
-        this.type = type;
+        this.type = parse(type);
         this.methodName = methodName;
+    }
+
+    private String parse(String type) {
+        if (type.equals("(I)V")) {
+            return "(int), void";
+        } else if (type.equals("(F)V")) {
+            return "(float), void";
+        } else if(type.equals("(IF)V")) {
+            return "(int, float), void";
+        }
+        return type;
     }
 
     public void resolveMethod() {
@@ -69,6 +80,7 @@ public class MethodRef {
 
     private JvmMethod findMethodByTraversal(Collection<JvmMethod> methods) {
         for (JvmMethod method: methods) {
+            System.out.println(method.getName() + "====" + method.getType()+"------" + type);
             if (methodName.equals(method.getName()) && (type.replace("/", ".")).contains(method.getType())) {
                 System.out.println("find " + methodName);
                 return method;

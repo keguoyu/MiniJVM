@@ -1,9 +1,6 @@
 package com.keguoyu.minijvm.lang;
 
-import com.sun.tools.classfile.AccessFlags;
-import com.sun.tools.classfile.ConstantPoolException;
-import com.sun.tools.classfile.Descriptor;
-import com.sun.tools.classfile.Field;
+import com.sun.tools.classfile.*;
 
 public class JvmField {
 
@@ -14,9 +11,17 @@ public class JvmField {
     private String fieldType;
     private int fieldIndex;
 
+    private int constantIndex;
+
+    private Object value;
+
     public JvmField(JvmClass<?> jvmClass, Field field) {
         this.jvmClass = jvmClass;
         this.field = field;
+        ConstantValue_attribute attribute = (ConstantValue_attribute) field.attributes.get("ConstantValue");
+        if (attribute != null) {
+            constantIndex = attribute.constantvalue_index;
+        }
         initFieldName();
         initType();
     }
@@ -31,6 +36,18 @@ public class JvmField {
 
     public int getFieldIndex() {
         return fieldIndex;
+    }
+
+    public int getConstantIndex() {
+        return constantIndex;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    public Object getValue() {
+        return value;
     }
 
     public String getName() {
@@ -72,5 +89,7 @@ public class JvmField {
     public boolean isFinal() {
         return field.access_flags.is(AccessFlags.ACC_FINAL);
     }
+
+
 
 }

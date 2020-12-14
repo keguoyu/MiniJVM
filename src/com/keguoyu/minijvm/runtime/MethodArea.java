@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * JVM方法区
+ * JVM方法区 根据虚拟机规范 运行时常量池也放在这里
  * 存放加载好的类信息 以及运行时常量池
  */
 public class MethodArea {
@@ -28,6 +28,7 @@ public class MethodArea {
         SingleConstantPool singleConstantPool = runtimeConstantPool.get(jvmClass);
         if (singleConstantPool == null && targetSize != -1) {
             singleConstantPool = new SingleConstantPool(jvmClass, targetSize);
+            jvmClass.constantPool = singleConstantPool;
             runtimeConstantPool.put(jvmClass, singleConstantPool);
         }
         if (singleConstantPool == null) {
