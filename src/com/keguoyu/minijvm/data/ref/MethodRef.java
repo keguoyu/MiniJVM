@@ -3,12 +3,12 @@ package com.keguoyu.minijvm.data.ref;
 import com.keguoyu.minijvm.lang.JvmClass;
 import com.keguoyu.minijvm.lang.JvmClassLoader;
 import com.keguoyu.minijvm.lang.JvmMethod;
-import com.keguoyu.minijvm.runtime.SingleConstantPool;
+import com.keguoyu.minijvm.runtime.RuntimeConstantPool;
 
 import java.util.Collection;
 
 public class MethodRef {
-    public SingleConstantPool constantPool;
+    public RuntimeConstantPool constantPool;
     public JvmMethod jvmMethod;
     private final String className;
     private final String type;

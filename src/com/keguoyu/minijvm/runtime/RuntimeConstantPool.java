@@ -2,12 +2,12 @@ package com.keguoyu.minijvm.runtime;
 
 import com.keguoyu.minijvm.lang.JvmClass;
 
-public class SingleConstantPool {
+public class RuntimeConstantPool {
 
     public final JvmClass<?> jvmClass;
     private final Object[] constantPool;
 
-    public SingleConstantPool(JvmClass<?> jvmClass, int targetSize) {
+    public RuntimeConstantPool(JvmClass<?> jvmClass, int targetSize) {
         this.jvmClass = jvmClass;
         this.constantPool = new Object[targetSize];
     }

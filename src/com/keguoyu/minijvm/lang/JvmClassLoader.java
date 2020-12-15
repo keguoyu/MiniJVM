@@ -1,6 +1,6 @@
 package com.keguoyu.minijvm.lang;
 
-import com.keguoyu.minijvm.runtime.SingleConstantPool;
+import com.keguoyu.minijvm.runtime.RuntimeConstantPool;
 
 import com.keguoyu.minijvm.main.JavaVirtualMachine;
 import com.keguoyu.minijvm.data.ref.ClassReference;
@@ -9,10 +9,10 @@ import com.keguoyu.minijvm.data.ref.InterfaceMethodRef;
 import com.keguoyu.minijvm.data.ref.MethodRef;
 import com.keguoyu.minijvm.runtime.MethodArea;
 import com.keguoyu.minijvm.utils.Debugger;
+import com.keguoyu.minijvm.utils.TypesConverter;
 import com.sun.tools.classfile.*;
 
 import java.util.AbstractMap;
-import java.util.Map;
 
 
 /**
@@ -104,8 +104,6 @@ public abstract class JvmClassLoader {
         int instanceFieldCount = 0;
         for (Field field: jvmClass.classFile.fields) {
             try {
-                ConstantValue_attribute attribute = (ConstantValue_attribute) field.attributes.get("ConstantValue");
-
                 String name = field.getName(jvmClass.classFile.constant_pool);
                 JvmField jvmField = new JvmField(jvmClass, field);
                 if (field.access_flags.is(AccessFlags.ACC_STATIC)) {
@@ -129,7 +127,7 @@ public abstract class JvmClassLoader {
         final MethodArea methodArea = JavaVirtualMachine.getMethodArea();
 
         ConstantPool classFileConstantsPool = jvmClass.classFile.constant_pool;
-        final SingleConstantPool singleConstantPool = methodArea.getConstantPool(jvmClass, classFileConstantsPool.size());
+        final RuntimeConstantPool runtimeConstantPool = methodArea.getConstantPool(jvmClass, classFileConstantsPool.size());
         classFileConstantsPool.size();
         for (int i = 1; i < jvmClass.classFile.constant_pool.size(); i++) {
             ConstantPool.CPInfo cpInfo;
@@ -138,25 +136,25 @@ public abstract class JvmClassLoader {
             if (cpInfo != null) {
                 switch (cpInfo.getTag()) {
                     case ConstantPool.CONSTANT_Integer:
-                        singleConstantPool.set(i, ((ConstantPool.CONSTANT_Integer_info) cpInfo).value);
+                        runtimeConstantPool.set(i, ((ConstantPool.CONSTANT_Integer_info) cpInfo).value);
                         break;
                     case ConstantPool.CONSTANT_Float:
-                        singleConstantPool.set(i, ((ConstantPool.CONSTANT_Float_info) cpInfo).value);
+                        runtimeConstantPool.set(i, ((ConstantPool.CONSTANT_Float_info) cpInfo).value);
                         break;
                     case ConstantPool.CONSTANT_Long:
-                        singleConstantPool.set(i, ((ConstantPool.CONSTANT_Long_info) cpInfo).value);
+                        runtimeConstantPool.set(i, ((ConstantPool.CONSTANT_Long_info) cpInfo).value);
                         break;
                     case ConstantPool.CONSTANT_Double:
-                        singleConstantPool.set(i, ((ConstantPool.CONSTANT_Double_info) cpInfo).value);
+                        runtimeConstantPool.set(i, ((ConstantPool.CONSTANT_Double_info) cpInfo).value);
                         break;
                     case ConstantPool.CONSTANT_String:
-                        singleConstantPool.set(i, ((ConstantPool.CONSTANT_String_info) cpInfo).getString());
+                        runtimeConstantPool.set(i, ((ConstantPool.CONSTANT_String_info) cpInfo).getString());
                         break;
                     case ConstantPool.CONSTANT_Class:
                         ClassReference classReference = newClassRef();
-                        classReference.constantPool = singleConstantPool;
+                        classReference.constantPool = runtimeConstantPool;
                         classReference.fullName = ((ConstantPool.CONSTANT_Class_info) cpInfo).getName();
-                        singleConstantPool.set(i, classReference);
+                        runtimeConstantPool.set(i, classReference);
                         break;
                     case ConstantPool.CONSTANT_Fieldref:
                         ConstantPool.CONSTANT_Fieldref_info fieldrefInfo = (ConstantPool.CONSTANT_Fieldref_info) cpInfo;
@@ -167,8 +165,8 @@ public abstract class JvmClassLoader {
                         FieldReference fieldReference = newFieldRef(fieldRefClassInfo.getName(),
                                 fieldRefNameAndTypeInfo.getType(), fieldRefNameAndTypeInfo.getName());
                         fieldReference.jvmClass = jvmClass;
-                        fieldReference.constantPool = singleConstantPool;
-                        singleConstantPool.set(i, fieldReference);
+                        fieldReference.constantPool = runtimeConstantPool;
+                        runtimeConstantPool.set(i, fieldReference);
                         break;
                     case ConstantPool.CONSTANT_Methodref:
                         ConstantPool.CONSTANT_Methodref_info methodrefInfo = (ConstantPool.CONSTANT_Methodref_info) cpInfo;
@@ -176,9 +174,9 @@ public abstract class JvmClassLoader {
                         ConstantPool.CONSTANT_NameAndType_info methodRefNameAndTypeInfo =
                                 classFileConstantsPool.getNameAndTypeInfo(methodrefInfo.name_and_type_index);
                         MethodRef methodRef = newMethodRef(methodRefClsInfo.getName(),
-                                methodRefNameAndTypeInfo.getType(), methodRefNameAndTypeInfo.getName());
-                        methodRef.constantPool = singleConstantPool;
-                        singleConstantPool.set(i, methodRef);
+                                TypesConverter.parse(methodRefNameAndTypeInfo.getType()), methodRefNameAndTypeInfo.getName());
+                        methodRef.constantPool = runtimeConstantPool;
+                        runtimeConstantPool.set(i, methodRef);
                         break;
                     case ConstantPool.CONSTANT_InterfaceMethodref:
                         ConstantPool.CONSTANT_InterfaceMethodref_info interfaceMethodrefInfo =
@@ -187,7 +185,7 @@ public abstract class JvmClassLoader {
                         interfaceMethodRef.className = interfaceMethodrefInfo.getClassName();
                         interfaceMethodRef.methodName = interfaceMethodrefInfo.getNameAndTypeInfo().getName();
                         interfaceMethodRef.type = interfaceMethodrefInfo.getNameAndTypeInfo().getType();
-                        singleConstantPool.set(i, interfaceMethodRef);
+                        runtimeConstantPool.set(i, interfaceMethodRef);
                         break;
                 }
             }  } catch (ConstantPoolException invalidIndex) {

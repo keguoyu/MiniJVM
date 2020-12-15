@@ -48,10 +48,9 @@ public class StackFrame {
     @Override
     public String toString() {
         return "StackFrame{" +
-                "bottom=" + bottom +
-                ", localVariable=" + localVariable +
+                "localVariable=" + localVariable +
                 ", operationStack=" + operationStack +
-                ", jvmThread=" + jvmThread +
+                ", jvmMethod=" + jvmMethod +
                 '}';
     }
 }

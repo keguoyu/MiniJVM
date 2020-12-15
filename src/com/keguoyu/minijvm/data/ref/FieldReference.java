@@ -3,7 +3,7 @@ package com.keguoyu.minijvm.data.ref;
 import com.keguoyu.minijvm.lang.JvmClass;
 import com.keguoyu.minijvm.lang.JvmClassLoader;
 import com.keguoyu.minijvm.lang.JvmField;
-import com.keguoyu.minijvm.runtime.SingleConstantPool;
+import com.keguoyu.minijvm.runtime.RuntimeConstantPool;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * 字段引用
  */
 public class FieldReference {
-    public SingleConstantPool constantPool;
+    public RuntimeConstantPool constantPool;
     public JvmClass<?> jvmClass;
     private JvmField jvmField;
     private final String className;

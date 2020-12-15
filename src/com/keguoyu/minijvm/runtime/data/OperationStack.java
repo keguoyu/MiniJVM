@@ -6,7 +6,6 @@ import java.util.Stack;
  * 操作数栈
  */
 public class OperationStack {
-    public int size;
     public Stack<Object> objects;
 
     public OperationStack(int maxSize) {
@@ -21,10 +20,17 @@ public class OperationStack {
         return objects.pop();
     }
 
+    public int size() {
+        return objects.size();
+    }
+
+    public Object getObjAt(int pos) {
+        return objects.get(pos);
+    }
+
     @Override
     public String toString() {
         return "OperationStack{" +
-                "size=" + size +
                 ", objects=" + objects +
                 '}';
     }

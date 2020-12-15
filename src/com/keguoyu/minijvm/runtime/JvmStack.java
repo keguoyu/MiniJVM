@@ -3,6 +3,9 @@ package com.keguoyu.minijvm.runtime;
 
 import com.keguoyu.minijvm.runtime.data.StackFrame;
 
+/**
+ * Java虚拟机栈
+ */
 public class JvmStack {
     public final int maxStackSize;
     public int currentSize;

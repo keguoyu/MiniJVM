@@ -9,6 +9,9 @@ public class OperationFactory {
 
     private static boolean init = false;
 
+    /**
+     * 初始化指令集
+     */
     public static void checkInitOrNot() {
         synchronized (OperationFactory.class) {
             if (!init) {

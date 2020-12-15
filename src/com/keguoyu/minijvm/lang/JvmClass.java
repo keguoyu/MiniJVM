@@ -1,6 +1,6 @@
 package com.keguoyu.minijvm.lang;
 
-import com.keguoyu.minijvm.runtime.SingleConstantPool;
+import com.keguoyu.minijvm.runtime.RuntimeConstantPool;
 import com.sun.tools.classfile.*;
 
 import java.util.*;
@@ -23,7 +23,7 @@ public class JvmClass<T> {
 
     private boolean mClinitCalled = false;
 
-    public SingleConstantPool constantPool;
+    public RuntimeConstantPool constantPool;
 
     //当创建JvmClass的时候 类的所有信息都必要明确
     public JvmClass(ClassFile classFile, String className, JvmClassLoader jvmClassLoader) {

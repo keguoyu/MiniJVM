@@ -2,13 +2,13 @@ package com.keguoyu.minijvm.data.ref;
 
 import com.keguoyu.minijvm.lang.JvmClass;
 import com.keguoyu.minijvm.lang.JvmClassLoader;
-import com.keguoyu.minijvm.runtime.SingleConstantPool;
+import com.keguoyu.minijvm.runtime.RuntimeConstantPool;
 
 /**
  * 从常量池的类符号引用解析而来
  */
 public class ClassReference {
-    public SingleConstantPool constantPool;
+    public RuntimeConstantPool constantPool;
     public JvmClass<?> jvmClass;
     public String fullName;
 

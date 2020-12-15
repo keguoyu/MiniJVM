@@ -14,7 +14,7 @@ public class MethodArea {
 
     //运行时常量池
     //class作为访问运行时常量池的入口
-    private final Map<JvmClass<?>, SingleConstantPool> runtimeConstantPool = new HashMap<>();
+    private final Map<JvmClass<?>, RuntimeConstantPool> runtimeConstantPool = new HashMap<>();
 
     public void put(String fullName, JvmClass<?> jvmClass) {
         classCache.put(fullName, jvmClass);
@@ -24,24 +24,24 @@ public class MethodArea {
         return classCache.get(fullName);
     }
 
-    private SingleConstantPool checkPoolNull(JvmClass<?> jvmClass, int targetSize) {
-        SingleConstantPool singleConstantPool = runtimeConstantPool.get(jvmClass);
-        if (singleConstantPool == null && targetSize != -1) {
-            singleConstantPool = new SingleConstantPool(jvmClass, targetSize);
-            jvmClass.constantPool = singleConstantPool;
-            runtimeConstantPool.put(jvmClass, singleConstantPool);
+    private RuntimeConstantPool checkPoolNull(JvmClass<?> jvmClass, int targetSize) {
+        RuntimeConstantPool runtimeConstantPool = this.runtimeConstantPool.get(jvmClass);
+        if (runtimeConstantPool == null && targetSize != -1) {
+            runtimeConstantPool = new RuntimeConstantPool(jvmClass, targetSize);
+            jvmClass.constantPool = runtimeConstantPool;
+            this.runtimeConstantPool.put(jvmClass, runtimeConstantPool);
         }
-        if (singleConstantPool == null) {
+        if (runtimeConstantPool == null) {
             throw new RuntimeException("constantPool not init");
         }
-        return singleConstantPool;
+        return runtimeConstantPool;
     }
 
-    public SingleConstantPool getConstantPool(JvmClass<?> jvmClass, int targetSize) {
+    public RuntimeConstantPool getConstantPool(JvmClass<?> jvmClass, int targetSize) {
         return checkPoolNull(jvmClass, targetSize);
     }
 
-    public SingleConstantPool getConstantPool(JvmClass<?> jvmClass) {
+    public RuntimeConstantPool getConstantPool(JvmClass<?> jvmClass) {
         return getConstantPool(jvmClass, -1);
     }
 

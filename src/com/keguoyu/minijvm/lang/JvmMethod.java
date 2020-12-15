@@ -1,10 +1,7 @@
 package com.keguoyu.minijvm.lang;
 
 import com.keguoyu.minijvm.operation.OperationFactory;
-import com.sun.tools.classfile.Code_attribute;
-import com.sun.tools.classfile.ConstantPoolException;
-import com.sun.tools.classfile.Descriptor;
-import com.sun.tools.classfile.Method;
+import com.sun.tools.classfile.*;
 
 public class JvmMethod {
     public final Method method;
@@ -34,6 +31,10 @@ public class JvmMethod {
         Descriptor descriptor = method.descriptor;
         try {
             argsCount = descriptor.getParameterCount(jvmClass.classFile.constant_pool);
+            //如果不是静态方法 方法参数需要加1 因为第一个参数默认就是this
+            if (!method.access_flags.is(AccessFlags.ACC_STATIC)) {
+                argsCount++;
+            }
             parameterTypes = descriptor.getParameterTypes(jvmClass.classFile.constant_pool);
             returnType = descriptor.getReturnType(jvmClass.classFile.constant_pool);
             methodName = method.getName(jvmClass.classFile.constant_pool);

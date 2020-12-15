@@ -5,7 +5,7 @@ import com.keguoyu.minijvm.data.ref.FieldReference;
 import com.keguoyu.minijvm.data.ref.MethodRef;
 import com.keguoyu.minijvm.lang.*;
 import com.keguoyu.minijvm.main.JavaVirtualMachine;
-import com.keguoyu.minijvm.runtime.SingleConstantPool;
+import com.keguoyu.minijvm.runtime.RuntimeConstantPool;
 import com.keguoyu.minijvm.runtime.data.StackFrame;
 
 import java.util.Objects;
@@ -439,7 +439,7 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
-            fload(frame, 0);
+            iload(frame, 0);
         }
 
         @Override
@@ -2139,9 +2139,13 @@ public enum OperationsGroup implements Operation {
     I2F {
         @Override
         public void execute(StackFrame frame) {
-            int v1 = (int) frame.operationStack.pop();
-            float result = (float) v1;
-            frame.operationStack.push(result);
+            try {
+                int v1 = (int) frame.operationStack.pop();
+                float result = (float) v1;
+                frame.operationStack.push(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -2785,6 +2789,7 @@ public enum OperationsGroup implements Operation {
         }
     },
 
+    //0xa7
     GOTO {
 
         short offset;
@@ -2982,8 +2987,11 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
+            if (!frame.jvmMethod.jvmClass.isClinitCalled()) {
+                frame.jvmMethod.jvmClass.callClinit();
+            }
             JvmClass<?> jvmClass = frame.jvmMethod.jvmClass;
-            SingleConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
+            RuntimeConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
             FieldReference fieldReference = (FieldReference) constantPool.get(index);
             JvmField jvmField = fieldReference.resolveField();
             System.out.println("GETStatiC "+jvmField.jvmClass.getStaticFieldVal(jvmField.getFieldIndex()));
@@ -3009,8 +3017,11 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
+            if (!frame.jvmMethod.jvmClass.isClinitCalled()) {
+                frame.jvmMethod.jvmClass.callClinit();
+            }
             JvmClass<?> jvmClass = frame.jvmMethod.jvmClass;
-            SingleConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
+            RuntimeConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
             FieldReference fieldReference = (FieldReference) constantPool.get(index);
             JvmField jvmField = fieldReference.resolveField();
             if (!jvmField.isStatic()) {
@@ -3043,10 +3054,11 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             JvmClass<?> jvmClass = frame.jvmMethod.jvmClass;
-            SingleConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
+            RuntimeConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
             FieldReference fieldReference = (FieldReference) constantPool.get(index);
             JvmField jvmField = fieldReference.resolveField();
-            frame.operationStack.push(jvmClass.getInstanceFieldVal(jvmField.getFieldIndex()));
+            JvmObject obj = (JvmObject) frame.operationStack.pop();
+            frame.operationStack.push(obj.getInstanceFieldVal(jvmField.getFieldIndex()));
         }
 
         @Override
@@ -3068,10 +3080,12 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             JvmClass<?> jvmClass = frame.jvmMethod.jvmClass;
-            SingleConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
+            RuntimeConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
             FieldReference fieldReference = (FieldReference) constantPool.get(index);
             JvmField jvmField = fieldReference.resolveField();
-            jvmClass.setInstanceFieldVal(jvmField.getFieldIndex(), frame.operationStack.pop());
+            Object v1 = frame.operationStack.pop();
+            JvmObject obj = (JvmObject) frame.operationStack.pop();
+            obj.setInstanceFieldVal(jvmField.getFieldIndex(), v1);
         }
 
         @Override
@@ -3092,7 +3106,7 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
-            SingleConstantPool constantPool =
+            RuntimeConstantPool constantPool =
                     JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
             MethodRef methodRef = (MethodRef) constantPool.get(offset);
             methodRef.resolveMethod();
@@ -3117,7 +3131,12 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
-            frame.operationStack.pop();
+            RuntimeConstantPool constantPool = frame.jvmMethod.jvmClass.constantPool;
+            MethodRef methodRef = (MethodRef) constantPool.get(offset);
+            methodRef.resolveMethod();
+            final JvmMethod method = methodRef.jvmMethod;
+            final JvmClass<?> jvmClass = method.jvmClass;
+
         }
 
         @Override
@@ -3138,7 +3157,10 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
-            SingleConstantPool constantPool =
+            if (!frame.jvmMethod.jvmClass.isClinitCalled()) {
+                frame.jvmMethod.jvmClass.callClinit();
+            }
+            RuntimeConstantPool constantPool =
                     JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
             MethodRef methodRef = (MethodRef) constantPool.get(offset);
             methodRef.resolveMethod();
@@ -3148,6 +3170,19 @@ public enum OperationsGroup implements Operation {
         @Override
         public String getCode() {
             return "0xb8";
+        }
+    },
+
+    //0xb9
+    INVOKE_INTERFACE {
+        @Override
+        public void execute(StackFrame frame) {
+
+        }
+
+        @Override
+        public String getCode() {
+            return "0xb9";
         }
     },
 
@@ -3163,6 +3198,9 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
+            if (!frame.jvmMethod.jvmClass.isClinitCalled()) {
+                frame.jvmMethod.jvmClass.callClinit();
+            }
             ClassReference classReference = (ClassReference) JavaVirtualMachine
                     .getMethodArea().getConstantPool(frame.jvmMethod.jvmClass).get(offset);
             classReference.loadClass();
@@ -3190,14 +3228,14 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
-            SingleConstantPool singleConstantPool =
+            RuntimeConstantPool runtimeConstantPool =
                     JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
             JvmObject v1 = (JvmObject) frame.operationStack.pop();
             if (v1 == null) {
                 frame.operationStack.push(0);
                 return;
             }
-            ClassReference reference = (ClassReference) singleConstantPool.get(offset);
+            ClassReference reference = (ClassReference) runtimeConstantPool.get(offset);
             JvmClass<?> jvmClass = reference.loadClass();
             if (!v1.jvmClass.isAssignFrom(jvmClass)) {
                 throw new RuntimeException("java.lang.ClassCastException");
@@ -3222,14 +3260,14 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
-            SingleConstantPool singleConstantPool =
+            RuntimeConstantPool runtimeConstantPool =
                     JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
             JvmObject v1 = (JvmObject) frame.operationStack.pop();
             if (v1 == null) {
                 frame.operationStack.push(0);
                 return;
             }
-            ClassReference reference = (ClassReference) singleConstantPool.get(offset);
+            ClassReference reference = (ClassReference) runtimeConstantPool.get(offset);
             JvmClass<?> jvmClass = reference.loadClass();
             if (v1.jvmClass.isAssignFrom(jvmClass)) {
                 frame.operationStack.push(1);
@@ -3389,7 +3427,7 @@ public enum OperationsGroup implements Operation {
     }
 
     public void ldc(StackFrame stackFrame, int index) {
-        SingleConstantPool constantPool = JavaVirtualMachine.getMethodArea()
+        RuntimeConstantPool constantPool = JavaVirtualMachine.getMethodArea()
                 .getConstantPool(stackFrame.jvmMethod.jvmClass);
         Object constant = constantPool.get(index);
         stackFrame.operationStack.push(constant);
@@ -3399,8 +3437,9 @@ public enum OperationsGroup implements Operation {
         StackFrame invokeFrame = new StackFrame(invokeMethod);
         currentFrame.jvmThread.pushFrame(invokeFrame);
         int argsCount = invokeMethod.getArgsCount();
-        for (int i = 0;i < argsCount; i++) {
-            invokeFrame.localVariable.set(i, currentFrame.operationStack.pop());
+        for (int i = argsCount - 1;i >= 0; i--) {
+            Object pop = currentFrame.operationStack.pop();
+            invokeFrame.localVariable.set(i, pop);
         }
     }
 
