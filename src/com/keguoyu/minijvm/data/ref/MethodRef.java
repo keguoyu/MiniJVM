@@ -21,6 +21,14 @@ public class MethodRef {
         this.methodName = methodName;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
     private String parse(String type) {
         if (type.equals("(I)V")) {
             return "(int), void";
@@ -32,10 +40,11 @@ public class MethodRef {
         return type;
     }
 
-    public void resolveMethod() {
+    public JvmMethod resolveMethod() {
         if (jvmMethod == null) {
             resolveMethodInternal();
         }
+        return jvmMethod;
     }
 
     public void resolveInterfaceMethod() {
@@ -87,6 +96,10 @@ public class MethodRef {
             }
         }
         return null;
+    }
+
+    public JvmClass<?> getJvmClass() {
+        return jvmClass;
     }
 
     @Override

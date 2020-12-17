@@ -24,7 +24,7 @@ public class Args {
             isRightFmt = false;
             return;
         }
-        if (!args[0].equals("mjava")) {
+        if (!args[0].equals("java")) {
             isRightFmt = false;
         } else {
             switch (args[1]) {

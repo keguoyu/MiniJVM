@@ -40,14 +40,27 @@ public abstract class JvmClassLoader {
         if (jvmClass != null) {
             return jvmClass;
         }
-        if (parent != null) {
-            jvmClass = parent.loadClass(classPath, className);
-        }
-        if (jvmClass == null) {
-            jvmClass = findClass(classPath, className);
+        if (className.charAt(0) == '[') {
+            System.out.println("loadArrayClass");
+            jvmClass = loadArrayClass(className);
+        } else{
+            if (parent != null) {
+                jvmClass = parent.loadClass(classPath, className);
+            }
+            if (jvmClass == null) {
+                jvmClass = findClass(classPath, className);
+            }
         }
         return jvmClass;
     }
+
+    private JvmClass<?> loadArrayClass(String clsName) {
+        JvmClass<?> jvmClass = new JvmClass<>(null, clsName, this);
+        jvmClass.setClinitCalled(true);
+        jvmClass.superClass = loadClass("", "java/lang/Object");
+        return jvmClass;
+    }
+
 
     /**
      * 在双亲委派的模型中 defineClass在单次类加载中只会调用一次
@@ -185,6 +198,7 @@ public abstract class JvmClassLoader {
                         interfaceMethodRef.className = interfaceMethodrefInfo.getClassName();
                         interfaceMethodRef.methodName = interfaceMethodrefInfo.getNameAndTypeInfo().getName();
                         interfaceMethodRef.type = interfaceMethodrefInfo.getNameAndTypeInfo().getType();
+                        interfaceMethodRef.constantPool = runtimeConstantPool;
                         runtimeConstantPool.set(i, interfaceMethodRef);
                         break;
                 }

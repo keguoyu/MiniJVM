@@ -17,6 +17,8 @@ public final class JavaVirtualMachine {
     private static final MethodArea methodArea = new MethodArea();
 
     static {
+        //双亲委派模型
+        //实际上Java的类加载并不是通过这种方式构建 旨在说明问题
         JvmClassLoader bootLoader = new BootPathJvmClassLoader();
         JvmClassLoader extLoader = new ExtPathJvmClassLoader(bootLoader);
         appClassLoader = new UserPathJvmClassLoader(extLoader);
@@ -36,10 +38,13 @@ public final class JavaVirtualMachine {
     public void start(String classPath, String className) {
         OperationFactory.checkInitOrNot();
         JvmClass<?> jvmClass = appClassLoader.loadClass(classPath, className);
-        jvmClass.callClinit();
-        JvmMethod main = jvmClass.getMethod("main",
-                "([Ljava/lang/String;)V");
-        main.invoke();
+        JvmMethod main = jvmClass.getMethod("main", "([Ljava/lang/String;)V");
+        if (main != null) {
+            main.invoke();
+        } else {
+            System.err.println("Can't find main method");
+            System.exit(0);
+        }
     }
 
 }

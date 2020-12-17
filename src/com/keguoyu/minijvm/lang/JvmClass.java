@@ -1,7 +1,9 @@
 package com.keguoyu.minijvm.lang;
 
 import com.keguoyu.minijvm.runtime.RuntimeConstantPool;
+import com.keguoyu.minijvm.utils.ArrayTypes;
 import com.sun.tools.classfile.*;
+import static com.keguoyu.minijvm.utils.ArrayTypes.*;
 
 import java.util.*;
 
@@ -30,13 +32,15 @@ public class JvmClass<T> {
         this.classFile = classFile;
         this.fullName = className;
         this.classLoader= jvmClassLoader;
-        for (Method method: classFile.methods) {
-            try {
-                String name = method.getName(classFile.constant_pool);
-                String desc = method.descriptor.getValue(classFile.constant_pool);
-                methods.put(new AbstractMap.SimpleEntry<>(name, desc), new JvmMethod(method, this));
-            } catch (ConstantPoolException e) {
-                e.printStackTrace();
+        if (classFile != null) {
+            for (Method method : classFile.methods) {
+                try {
+                    String name = method.getName(classFile.constant_pool);
+                    String desc = method.descriptor.getValue(classFile.constant_pool);
+                    methods.put(new AbstractMap.SimpleEntry<>(name, desc), new JvmMethod(method, this));
+                } catch (ConstantPoolException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -131,6 +135,10 @@ public class JvmClass<T> {
         return this == another || isSubClassOf(another) || isImplementsOf(another);
     }
 
+    public boolean isSuperClassOf(JvmClass<?> another) {
+        return another.isSubClassOf(this);
+    }
+
     public boolean isSubClassOf(JvmClass<?> another) {
         return superClass != null && superClass == another;
     }
@@ -161,28 +169,53 @@ public class JvmClass<T> {
         return classFile.access_flags.is(AccessFlags.ACC_ABSTRACT);
     }
 
+    public boolean isSuper() {
+        return classFile.access_flags.is(AccessFlags.ACC_SUPER);
+    }
+
     public JvmObject newInstance() {
         return new JvmObject(this, instanceFields.length);
     }
 
-    /**
-     * 执行Class的clinit方法
-     *
-     * 执行new指令创建类实例，但类还没有被初始化。
-     * ·执行putstatic、getstatic指令存取类的静态变量，但声明该字段
-     * 的类还没有被初始化。
-     * ·执行invokestatic调用类的静态方法，但声明该方法的类还没
-     * 有被初始化。
-     * ·当初始化一个类时，如果类的超类还没有被初始化，要先初始化类的超类。
-     * ·执行某些反射操作时。
-     *
-     */
-    public void callClinit() {
-        JvmMethod clinit = getMethod("<clinit>", "()V");
-        if (clinit != null) {
-            BytecodeInvoker.invoke(clinit);
+    public JvmArray newArray(int arrayType, int length) {
+        switch (arrayType) {
+            case ARRAY_BOOLEAN:
+            case ARRAY_BYTE:
+            case ARRAY_CHAR:
+            case ARRAY_SHORT:
+            case ARRAY_INT:
+            case ARRAY_LONG:
+            case ARRAY_FLOAT:
+            case ARRAY_DOUBLE:
+            default:
+                return new JvmArray(new Object[length]);
+//            default:
+//                return new JvmArray(new JvmObject[length]);
         }
-        mClinitCalled = true;
+    }
+
+    public JvmClass<?> getArrayClass() {
+        return classLoader.loadClass("", getArrayClassName(getClassName()));
+    }
+
+    private String getArrayClassName(String className) {
+        return "[" + toDescriptor(className);
+    }
+
+    private String toDescriptor(String className) {
+        if (className.charAt(0) == '[') {
+            // array
+            return className;
+        }
+        if (primitiveTypes.containsKey(className)) {
+            return primitiveTypes.get(className);
+        }
+        // object
+        return "L" + className + ";";
+    }
+
+    public void setClinitCalled(boolean mClinitCalled) {
+        this.mClinitCalled = mClinitCalled;
     }
 
     public boolean isClinitCalled() {

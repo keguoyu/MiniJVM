@@ -88,4 +88,26 @@ public class JvmMethod {
         return type;
     }
 
+    public boolean isStatic() {
+        return method.access_flags.is(AccessFlags.ACC_STATIC);
+    }
+
+    public boolean isPrivate() {
+        return method.access_flags.is(AccessFlags.ACC_PRIVATE);
+    }
+
+    public boolean isPublic() {
+        return method.access_flags.is(AccessFlags.ACC_PUBLIC);
+    }
+
+    public boolean isAbstract() {
+        return method.access_flags.is(AccessFlags.ACC_ABSTRACT);
+    }
+
+    public boolean isProtected() {
+        return method.access_flags.is(AccessFlags.ACC_PROTECTED);
+    }
+
+
+
 }

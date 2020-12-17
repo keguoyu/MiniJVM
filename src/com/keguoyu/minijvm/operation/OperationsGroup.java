@@ -2,13 +2,17 @@ package com.keguoyu.minijvm.operation;
 
 import com.keguoyu.minijvm.data.ref.ClassReference;
 import com.keguoyu.minijvm.data.ref.FieldReference;
+import com.keguoyu.minijvm.data.ref.InterfaceMethodRef;
 import com.keguoyu.minijvm.data.ref.MethodRef;
 import com.keguoyu.minijvm.lang.*;
 import com.keguoyu.minijvm.main.JavaVirtualMachine;
 import com.keguoyu.minijvm.runtime.RuntimeConstantPool;
 import com.keguoyu.minijvm.runtime.data.StackFrame;
+import com.keguoyu.minijvm.utils.MethodLookUp;
 
 import java.util.Objects;
+
+import static com.keguoyu.minijvm.utils.ArrayTypes.*;
 
 /**
  * 所有指令集
@@ -704,10 +708,10 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             int index = (int) frame.operationStack.pop();
-            int[] iArray = (int[]) frame.operationStack.pop();
+            JvmArray iArray = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(iArray);
-            checkIndex(iArray.length, index);
-            frame.operationStack.push(iArray[index]);
+            checkIndex(iArray.length(), index);
+            frame.operationStack.push(iArray.get(index));
         }
 
         @Override
@@ -721,10 +725,10 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             int index = (int) frame.operationStack.pop();
-            long[] iArray = (long[]) frame.operationStack.pop();
+            JvmArray iArray = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(iArray);
-            checkIndex(iArray.length, index);
-            frame.operationStack.push(iArray[index]);
+            checkIndex(iArray.length(), index);
+            frame.operationStack.push(iArray.get(index));
         }
 
         @Override
@@ -738,10 +742,10 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             int index = (int) frame.operationStack.pop();
-            float[] iArray = (float[]) frame.operationStack.pop();
+            JvmArray iArray = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(iArray);
-            checkIndex(iArray.length, index);
-            frame.operationStack.push(iArray[index]);
+            checkIndex(iArray.length(), index);
+            frame.operationStack.push(iArray.get(index));
         }
 
         @Override
@@ -755,10 +759,10 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             int index = (int) frame.operationStack.pop();
-            double[] iArray = (double[]) frame.operationStack.pop();
+            JvmArray iArray = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(iArray);
-            checkIndex(iArray.length, index);
-            frame.operationStack.push(iArray[index]);
+            checkIndex(iArray.length(), index);
+            frame.operationStack.push(iArray.get(index));
         }
 
         @Override
@@ -772,10 +776,10 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             int index = (int) frame.operationStack.pop();
-            Object[] iArray = (Object[]) frame.operationStack.pop();
+            JvmArray iArray = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(iArray);
-            checkIndex(iArray.length, index);
-            frame.operationStack.push(iArray[index]);
+            checkIndex(iArray.length(), index);
+            frame.operationStack.push(iArray.get(index));
         }
 
         @Override
@@ -789,10 +793,10 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             int index = (int) frame.operationStack.pop();
-            byte[] iArray = (byte[]) frame.operationStack.pop();
+            JvmArray iArray = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(iArray);
-            checkIndex(iArray.length, index);
-            frame.operationStack.push(iArray[index]);
+            checkIndex(iArray.length(), index);
+            frame.operationStack.push(iArray.get(index));
         }
 
         @Override
@@ -806,10 +810,10 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             int index = (int) frame.operationStack.pop();
-            char[] iArray = (char[]) frame.operationStack.pop();
+            JvmArray iArray = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(iArray);
-            checkIndex(iArray.length, index);
-            frame.operationStack.push(iArray[index]);
+            checkIndex(iArray.length(), index);
+            frame.operationStack.push(iArray.get(index));
         }
 
         @Override
@@ -823,10 +827,10 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             int index = (int) frame.operationStack.pop();
-            short[] iArray = (short[]) frame.operationStack.pop();
+            JvmArray iArray = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(iArray);
-            checkIndex(iArray.length, index);
-            frame.operationStack.push(iArray[index]);
+            checkIndex(iArray.length(), index);
+            frame.operationStack.push(iArray.get(index));
         }
 
         @Override
@@ -1205,10 +1209,10 @@ public enum OperationsGroup implements Operation {
         public void execute(StackFrame frame) {
             int value = (int) frame.operationStack.pop();
             int index = (int) frame.operationStack.pop();
-            int[] array = (int[]) frame.operationStack.pop();
+            JvmArray array = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(array);
-            checkIndex(array.length, index);
-            array[index] = value;
+            checkIndex(array.length(), index);
+            array.set(index, value);
         }
 
         @Override
@@ -1223,10 +1227,10 @@ public enum OperationsGroup implements Operation {
         public void execute(StackFrame frame) {
             int value = (int) frame.operationStack.pop();
             int index = (int) frame.operationStack.pop();
-            long[] array = (long[]) frame.operationStack.pop();
+            JvmArray array = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(array);
-            checkIndex(array.length, index);
-            array[index] = value;
+            checkIndex(array.length(), index);
+            array.set(index, value);
         }
 
         @Override
@@ -1241,10 +1245,10 @@ public enum OperationsGroup implements Operation {
         public void execute(StackFrame frame) {
             int value = (int) frame.operationStack.pop();
             int index = (int) frame.operationStack.pop();
-            float[] array = (float[]) frame.operationStack.pop();
+            JvmArray array = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(array);
-            checkIndex(array.length, index);
-            array[index] = value;
+            checkIndex(array.length(), index);
+            array.set(index, value);
         }
 
         @Override
@@ -1259,10 +1263,10 @@ public enum OperationsGroup implements Operation {
         public void execute(StackFrame frame) {
             int value = (int) frame.operationStack.pop();
             int index = (int) frame.operationStack.pop();
-            double[] array = (double[]) frame.operationStack.pop();
+            JvmArray array = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(array);
-            checkIndex(array.length, index);
-            array[index] = value;
+            checkIndex(array.length(), index);
+            array.set(index, value);
         }
 
         @Override
@@ -1277,10 +1281,10 @@ public enum OperationsGroup implements Operation {
         public void execute(StackFrame frame) {
             int value = (int) frame.operationStack.pop();
             int index = (int) frame.operationStack.pop();
-            Object[] array = (Object[]) frame.operationStack.pop();
+            JvmArray array = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(array);
-            checkIndex(array.length, index);
-            array[index] = value;
+            checkIndex(array.length(), index);
+            array.set(index,value);
         }
 
         @Override
@@ -1295,10 +1299,10 @@ public enum OperationsGroup implements Operation {
         public void execute(StackFrame frame) {
             int value = (int) frame.operationStack.pop();
             int index = (int) frame.operationStack.pop();
-            byte[] array = (byte[]) frame.operationStack.pop();
+            JvmArray array = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(array);
-            checkIndex(array.length, index);
-            array[index] = (byte) value;
+            checkIndex(array.length(), index);
+            array.set(index, value);
         }
 
         @Override
@@ -1313,10 +1317,10 @@ public enum OperationsGroup implements Operation {
         public void execute(StackFrame frame) {
             int value = (int) frame.operationStack.pop();
             int index = (int) frame.operationStack.pop();
-            char[] array = (char[]) frame.operationStack.pop();
+            JvmArray array = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(array);
-            checkIndex(array.length, index);
-            array[index] = (char) value;
+            checkIndex(array.length(), index);
+            array.set(index, (char)value);
         }
 
         @Override
@@ -1331,10 +1335,10 @@ public enum OperationsGroup implements Operation {
         public void execute(StackFrame frame) {
             int value = (int) frame.operationStack.pop();
             int index = (int) frame.operationStack.pop();
-            short[] array = (short[]) frame.operationStack.pop();
+            JvmArray array = (JvmArray) frame.operationStack.pop();
             Objects.requireNonNull(array);
-            checkIndex(array.length, index);
-            array[index] = (short) value;
+            checkIndex(array.length(), index);
+            array.set(index, (short)value);
         }
 
         @Override
@@ -2988,13 +2992,14 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             if (!frame.jvmMethod.jvmClass.isClinitCalled()) {
-                frame.jvmMethod.jvmClass.callClinit();
+                frame.revertNextPc();
+                BytecodeInvoker.initClass(frame.jvmThread, frame.jvmMethod.jvmClass);
+                return;
             }
             JvmClass<?> jvmClass = frame.jvmMethod.jvmClass;
             RuntimeConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
             FieldReference fieldReference = (FieldReference) constantPool.get(index);
             JvmField jvmField = fieldReference.resolveField();
-            System.out.println("GETStatiC "+jvmField.jvmClass.getStaticFieldVal(jvmField.getFieldIndex()));
             frame.operationStack.push(jvmField.jvmClass.getStaticFieldVal(jvmField.getFieldIndex()));
 
         }
@@ -3018,7 +3023,9 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             if (!frame.jvmMethod.jvmClass.isClinitCalled()) {
-                frame.jvmMethod.jvmClass.callClinit();
+                frame.revertNextPc();
+                BytecodeInvoker.initClass(frame.jvmThread, frame.jvmMethod.jvmClass);
+                return;
             }
             JvmClass<?> jvmClass = frame.jvmMethod.jvmClass;
             RuntimeConstantPool constantPool = JavaVirtualMachine.getMethodArea().getConstantPool(jvmClass);
@@ -3106,11 +3113,39 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
-            RuntimeConstantPool constantPool =
-                    JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
+            JvmClass<?> currentClass = frame.jvmMethod.jvmClass;
+            RuntimeConstantPool constantPool = currentClass.constantPool;
             MethodRef methodRef = (MethodRef) constantPool.get(offset);
-            methodRef.resolveMethod();
-            invokeMethod(frame, methodRef.jvmMethod);
+            JvmMethod resolveMethod = methodRef.resolveMethod();
+            if (resolveMethod.isStatic()) {
+                throw new RuntimeException("java.lang.IncompatibleClassChangeError");
+            }
+            if (methodRef.getMethodName().equals("println")) {
+                System.out.println("result:" + frame.operationStack.pop());
+                return;
+            }
+            JvmObject jvmObject = (JvmObject) frame.operationStack.getObjAt(resolveMethod.getArgsCount() - 1);
+            if (jvmObject == null) {
+                throw new RuntimeException("java.lang.NullPointerException");
+            }
+
+            if (resolveMethod.isProtected() &&
+                    resolveMethod.jvmClass.isSuperClassOf(currentClass) &&
+                    !resolveMethod.jvmClass.getPackageName().equals(currentClass.getPackageName()) &&
+                    jvmObject.jvmClass != currentClass &&
+                    !jvmObject.jvmClass.isSubClassOf(currentClass)) {
+
+//                if (!(jvmObject.jvmClass().IsArray() && resolvedMethod.Name() == "clone")) {
+//                    panic("java.lang.IllegalAccessError")
+//                }
+            }
+
+            JvmMethod methodToBeInvoked = MethodLookUp.lookUpMethodInSelf(jvmObject.jvmClass,
+                    methodRef.getType(), methodRef.getMethodName());
+            if (methodToBeInvoked == null || methodToBeInvoked.isAbstract()) {
+                throw new RuntimeException("java.lang.AbstractMethodError");
+            }
+            invokeMethod(frame, methodToBeInvoked);
         }
 
         @Override
@@ -3131,12 +3166,39 @@ public enum OperationsGroup implements Operation {
 
         @Override
         public void execute(StackFrame frame) {
+            JvmClass<?> currentClass = frame.jvmMethod.jvmClass;
             RuntimeConstantPool constantPool = frame.jvmMethod.jvmClass.constantPool;
             MethodRef methodRef = (MethodRef) constantPool.get(offset);
-            methodRef.resolveMethod();
-            final JvmMethod method = methodRef.jvmMethod;
-            final JvmClass<?> jvmClass = method.jvmClass;
+            JvmMethod resolveMethod = methodRef.resolveMethod();
+            if (resolveMethod.getMethodName().equals("<init>") && resolveMethod.jvmClass != methodRef.getJvmClass()) {
+                throw new RuntimeException("java.lang.NoSuchMethodError");
+            }
+            if (resolveMethod.isStatic()) {
+                throw new RuntimeException("java.lang.IncompatibleClassChangeError");
+            }
+            JvmObject jvmObject = (JvmObject) frame.operationStack.getObjAt(resolveMethod.getArgsCount() - 1);
+            if (jvmObject == null) {
+                throw new RuntimeException("java.lang.NullPointerException");
+            }
+            if (resolveMethod.isProtected() &&
+                    resolveMethod.jvmClass.isSuperClassOf(currentClass) &&
+                    !resolveMethod.jvmClass.getPackageName().equals(currentClass.getPackageName()) &&
+                    jvmObject.jvmClass != currentClass &&
+                    !jvmObject.jvmClass.isSubClassOf(currentClass)) {
+                throw new RuntimeException("java.lang.IllegalAccessError");
+            }
+            JvmMethod methodToBeInvoked = resolveMethod;
+            if (currentClass.isSuper() &&
+                    resolveMethod.jvmClass.isSuperClassOf(currentClass) &&
+                    !"<init>".equals(resolveMethod.getMethodName())) {
+                methodToBeInvoked = MethodLookUp.lookUpMethodInSuperClass(currentClass,
+                        methodRef.getType(), methodRef.getMethodName());
+            }
 
+            if (methodToBeInvoked == null || methodToBeInvoked.isAbstract()) {
+                throw new RuntimeException("java.lang.AbstractMethodError");
+            }
+            invokeMethod(frame, methodToBeInvoked);
         }
 
         @Override
@@ -3158,13 +3220,17 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             if (!frame.jvmMethod.jvmClass.isClinitCalled()) {
-                frame.jvmMethod.jvmClass.callClinit();
+                frame.revertNextPc();
+                BytecodeInvoker.initClass(frame.jvmThread, frame.jvmMethod.jvmClass);
+                return;
             }
-            RuntimeConstantPool constantPool =
-                    JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
-            MethodRef methodRef = (MethodRef) constantPool.get(offset);
-            methodRef.resolveMethod();
-            invokeMethod(frame, methodRef.jvmMethod);
+            MethodRef methodRef = (MethodRef) frame.jvmMethod.jvmClass.constantPool.get(offset);
+            JvmMethod jvmMethod = methodRef.resolveMethod();
+            // 非静态方法
+            if (!jvmMethod.isStatic()) {
+                throw new RuntimeException("INVOKE_STATIC call un static method");
+            }
+            invokeMethod(frame, jvmMethod);
         }
 
         @Override
@@ -3175,9 +3241,49 @@ public enum OperationsGroup implements Operation {
 
     //0xb9
     INVOKE_INTERFACE {
+
+        short offset;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            offset = reader.readShort();
+            reader.readByte();
+            reader.readByte();
+        }
+
         @Override
         public void execute(StackFrame frame) {
+            InterfaceMethodRef methodRef = (InterfaceMethodRef) frame.jvmMethod.jvmClass.constantPool.get(offset);
+            JvmMethod jvmMethod = methodRef.resolveInterfaceMethod();
+            if (jvmMethod.isPrivate() || jvmMethod.isStatic()) {
+                throw new RuntimeException("java.lang.IncompatibleClassChangeError");
+            }
+            JvmObject jvmObject = (JvmObject) frame.operationStack.getObjAt(jvmMethod.getArgsCount() - 1);
+            if (jvmObject == null) {
+                throw new RuntimeException("java.lang.NullPointerException");
+            }
+            if (!jvmObject.jvmClass.isImplementsOf(methodRef.jvmMethod.jvmClass)) {
+                throw new RuntimeException("java.lang.IncompatibleClassChangeError");
+            }
+            JvmMethod invokeMethod = findInvokeMethod(jvmObject.jvmClass, methodRef.type, methodRef.methodName);
+            if (invokeMethod == null || invokeMethod.isAbstract()) {
+                throw new RuntimeException("java.lang.AbstractMethodError");
+            }
+            if (!jvmMethod.isPublic()) {
+                throw new RuntimeException("java.lang.IllegalAccessError");
+            }
+            invokeMethod(frame, invokeMethod);
+        }
 
+        private JvmMethod findInvokeMethod(JvmClass<?> jvmClass, String methodType, String methodName) {
+            JvmMethod jvmMethod = MethodLookUp.lookUpMethodInSelf(jvmClass, methodType, methodName);
+            if (jvmMethod == null) {
+                jvmMethod = MethodLookUp.lookUpMethodInSuperClass(jvmClass, methodType, methodName);
+            }
+            if (jvmMethod == null) {
+                jvmMethod = MethodLookUp.lookUpMethodInInterfaces(jvmClass, methodType, methodName);
+            }
+            return jvmMethod;
         }
 
         @Override
@@ -3199,7 +3305,9 @@ public enum OperationsGroup implements Operation {
         @Override
         public void execute(StackFrame frame) {
             if (!frame.jvmMethod.jvmClass.isClinitCalled()) {
-                frame.jvmMethod.jvmClass.callClinit();
+                frame.revertNextPc();
+                BytecodeInvoker.initClass(frame.jvmThread, frame.jvmMethod.jvmClass);
+                return;
             }
             ClassReference classReference = (ClassReference) JavaVirtualMachine
                     .getMethodArea().getConstantPool(frame.jvmMethod.jvmClass).get(offset);
@@ -3217,6 +3325,103 @@ public enum OperationsGroup implements Operation {
         }
     },
 
+    NEW_ARRAY {
+
+        byte arrayType;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            arrayType = reader.readByte();
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            int arrayLength = (int) frame.operationStack.pop();
+            if (arrayLength < 0) {
+                throw new RuntimeException("java.lang.NegativeArraySizeException");
+            }
+            JvmClassLoader classLoader = frame.jvmMethod.jvmClass.classLoader;
+            JvmClass<?> jvmClass = loadArrayClass(classLoader);
+            JvmArray jvmArray = jvmClass.newArray(jvmClass.getClassName().charAt(0), arrayLength);
+            frame.operationStack.push(jvmArray);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xbc";
+        }
+
+        private JvmClass<?> loadArrayClass(JvmClassLoader classLoader) {
+            switch (arrayType) {
+                case ARRAY_BOOLEAN:
+                    return classLoader.loadClass("", "[Z");
+                case ARRAY_BYTE:
+                    return classLoader.loadClass("", "[B");
+                case ARRAY_CHAR:
+                    return classLoader.loadClass("", "[C");
+                case ARRAY_SHORT:
+                    return classLoader.loadClass("", "[S");
+                case ARRAY_INT:
+                    return classLoader.loadClass("", "[I");
+                case ARRAY_LONG:
+                    return classLoader.loadClass("", "[L");
+                case ARRAY_FLOAT:
+                    return classLoader.loadClass("", "[F");
+                case ARRAY_DOUBLE:
+                    return classLoader.loadClass("", "[D");
+                default: throw new RuntimeException("Invalid atype!");
+            }
+        }
+
+    },
+
+    ANEW_ARRAY {
+
+        short offset;
+
+        @Override
+        public void fetchOperands(BytecodeReader reader) {
+            offset = reader.readShort();
+        }
+
+        @Override
+        public void execute(StackFrame frame) {
+            ClassReference classReference = (ClassReference) frame.jvmMethod.jvmClass.constantPool.get(offset);
+            JvmClass<?> loadClass = classReference.loadClass();
+            int arrayLength = (int) frame.operationStack.pop();
+            if (arrayLength < 0) {
+                throw new RuntimeException("java.lang.NegativeArraySizeException");
+            }
+
+            JvmArray jvmArray = loadClass.getArrayClass().newArray(0, arrayLength);
+            frame.operationStack.push(jvmArray);
+        }
+
+        @Override
+        public String getCode() {
+            return "0xbd";
+        }
+    },
+
+    ARRAY_LENGTH {
+        @Override
+        public void execute(StackFrame frame) {
+            Object pop = frame.operationStack.pop();
+            if (!(pop instanceof JvmArray)) {
+                throw new RuntimeException("java.lang.NullPointerException");
+            }
+            JvmArray jvmArray = (JvmArray) pop;
+            int length = jvmArray.length();
+            frame.operationStack.push(length);
+
+        }
+
+        @Override
+        public String getCode() {
+            return "0xbe";
+        }
+    },
+
     //0xc0
     CHECK_CAST {
         short offset;
@@ -3231,6 +3436,7 @@ public enum OperationsGroup implements Operation {
             RuntimeConstantPool runtimeConstantPool =
                     JavaVirtualMachine.getMethodArea().getConstantPool(frame.jvmMethod.jvmClass);
             JvmObject v1 = (JvmObject) frame.operationStack.pop();
+            frame.operationStack.push(v1);
             if (v1 == null) {
                 frame.operationStack.push(0);
                 return;

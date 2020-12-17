@@ -26,7 +26,10 @@ public class StackFrame {
         localVariable = new LocalVariable(jvmMethod.maxLocalsVarsSize);
         operationStack = new OperationStack(jvmMethod.maxOperandsSize);
         this.jvmMethod = jvmMethod;
+    }
 
+    public void revertNextPc() {
+        this.nextPC = jvmThread.getPc();
     }
 
     public void attachThread(JvmThread jvmThread) {
