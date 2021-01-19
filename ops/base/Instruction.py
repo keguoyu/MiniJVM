@@ -5,7 +5,7 @@ import ctypes
 from abc import ABCMeta, abstractmethod
 
 from ops.base import BytecodeReader
-from runtime import Frame
+from vm import StackFrame
 
 
 class Instruction(metaclass=ABCMeta):
@@ -17,7 +17,7 @@ class Instruction(metaclass=ABCMeta):
 
     # 执行指令逻辑
     @abstractmethod
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         pass
 
 

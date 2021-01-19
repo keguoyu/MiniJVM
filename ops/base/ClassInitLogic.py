@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from runtime.Thread import Thread
-from runtime.heap.Class import Class
+from vm.JvmThread import JvmThread
+from vm.runtime.JvmClass import JvmClass
 
 
 # 查找并调用类的初始化方法
-def init_class(thread: Thread, clazz: Class):
+def init_class(thread: JvmThread, clazz: JvmClass):
     # 把类的init_started状态设置成true
     clazz.start_init()
     schedule_clinit(thread, clazz)
@@ -14,7 +14,7 @@ def init_class(thread: Thread, clazz: Class):
 
 
 # 准备执行类的初始化方法
-def schedule_clinit(thread: Thread, clazz: Class):
+def schedule_clinit(thread: JvmThread, clazz: JvmClass):
     clinit = clazz.get_clinit_method()
     if clinit is not None:
         new_frame = thread.new_frame(clinit)
@@ -22,7 +22,7 @@ def schedule_clinit(thread: Thread, clazz: Class):
 
 
 # 超类的初始化方法
-def init_super_class(thread: Thread, clazz: Class):
+def init_super_class(thread: JvmThread, clazz: JvmClass):
     if not clazz.is_interface():
         super_class = clazz.super_class
         if super_class is not None and not super_class.init_started:

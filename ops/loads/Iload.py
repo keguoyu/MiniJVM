@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 from ops.base.Instruction import Index8Instruction, NoOperandsInstruction
-from runtime import Frame
+from vm import StackFrame
 
 
-def _iload(frame: Frame, index):
+def _iload(frame: StackFrame, index):
     val = frame.local_vars.get_numeric(index)
     frame.operand_stack.push_numeric(val)
 

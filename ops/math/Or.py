@@ -2,10 +2,10 @@
 # encoding: utf-8
 
 from ops.base.Instruction import NoOperandsInstruction
-from runtime import Frame
+from vm import StackFrame
 
 
-def _or(frame: Frame):
+def _or(frame: StackFrame):
     stack = frame.operand_stack
     v2 = stack.pop_numeric()
     v1 = stack.pop_numeric()

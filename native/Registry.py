@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 Registry = dict()
 
 
-def native_method(frame: Frame):
+def native_method(frame: StackFrame):
     pass
 
 
@@ -42,6 +42,6 @@ def find_native_method(class_name, method_name, method_descriptor):
     return None
 
 
-def empty_native_method(frame: Frame):
+def empty_native_method(frame: StackFrame):
     # do nothing
     pass

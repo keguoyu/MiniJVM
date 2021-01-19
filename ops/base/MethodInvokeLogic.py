@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from runtime.Frame import Frame
-from runtime.heap.Method import Method
+from vm.StackFrame import StackFrame
+from vm.runtime.Method import Method
 
 
-def invoke_method(invoker_frame: Frame, method: Method):
+def invoke_method(invoker_frame: StackFrame, method: Method):
     # 创建新的帧并推入Java虚拟机栈
     thread = invoker_frame.thread
     new_frame = thread.new_frame(method)

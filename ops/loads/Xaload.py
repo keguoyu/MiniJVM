@@ -2,8 +2,8 @@
 # encoding: utf-8
 
 from ops.base.Instruction import NoOperandsInstruction
-from runtime.Frame import Frame
-from runtime.heap.Object import Object
+from vm.StackFrame import StackFrame
+from vm.runtime.JvmObject import Object
 
 
 def check_not_none(ref: Object):
@@ -20,7 +20,7 @@ def check_index(arr_len, index):
 
 
 class AALOAD(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         index = stack.pop_numeric()
         arr_ref = stack.pop_ref()
@@ -34,7 +34,7 @@ class AALOAD(NoOperandsInstruction):
 
 
 class BALOAD(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         index = stack.pop_numeric()
         arr_ref = stack.pop_ref()
@@ -46,7 +46,7 @@ class BALOAD(NoOperandsInstruction):
 
 
 class CALOAD(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         index = stack.pop_numeric()
         arr_ref = stack.pop_ref()
@@ -58,7 +58,7 @@ class CALOAD(NoOperandsInstruction):
 
 
 class DALOAD(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         index = stack.pop_numeric()
         arr_ref = stack.pop_ref()
@@ -70,7 +70,7 @@ class DALOAD(NoOperandsInstruction):
 
 
 class FALOAD(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         index = stack.pop_numeric()
         arr_ref = stack.pop_ref()
@@ -82,7 +82,7 @@ class FALOAD(NoOperandsInstruction):
 
 
 class IALOAD(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         index = stack.pop_numeric()
         arr_ref = stack.pop_ref()
@@ -94,7 +94,7 @@ class IALOAD(NoOperandsInstruction):
 
 
 class LALOAD(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         index = stack.pop_numeric()
         arr_ref = stack.pop_ref()
@@ -106,7 +106,7 @@ class LALOAD(NoOperandsInstruction):
 
 
 class SALOAD(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         index = stack.pop_numeric()
         arr_ref = stack.pop_ref()

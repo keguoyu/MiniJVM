@@ -2,11 +2,11 @@
 # encoding: utf-8
 
 from ops.base.Instruction import Index16Instruction
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
 class PUT_FIELD(Index16Instruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         current_method = frame.method
         current_class = current_method.get_class()
         cp = current_class.constant_pool

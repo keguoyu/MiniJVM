@@ -5,7 +5,7 @@ import ctypes
 
 from ops.base import MethodInvokeLogic
 from ops.base.Instruction import Instruction
-from runtime.heap import MethodLookup
+from vm.runtime import MethodLookup
 
 
 class INVOKE_INTERFACE(Instruction):

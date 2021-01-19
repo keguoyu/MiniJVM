@@ -3,10 +3,10 @@
 
 from ops.base.BranchLogic import branch
 from ops.base.Instruction import BranchInstruction
-from runtime import Frame
+from vm import StackFrame
 
 
-def _icmpPop(frame: Frame):
+def _icmpPop(frame: StackFrame):
     stack = frame.operand_stack
     val2 = stack.pop_numeric()
     val1 = stack.pop_numeric()

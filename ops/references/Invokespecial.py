@@ -3,12 +3,12 @@
 
 from ops.base import MethodInvokeLogic
 from ops.base.Instruction import Index16Instruction
-from runtime.Frame import Frame
-from runtime.heap import MethodLookup
+from vm.StackFrame import StackFrame
+from vm.runtime import MethodLookup
 
 
 class INVOKE_SPECIAL(Index16Instruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         # 获得当前类、当前常量池、方法符号引用
         current_class = frame.method.get_class()
         cp = current_class.constant_pool

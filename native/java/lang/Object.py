@@ -2,11 +2,11 @@
 # encoding: utf-8
 
 from native.Registry import register
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
 # public final native Class<?> getClass();
-def get_class(frame: Frame):
+def get_class(frame: StackFrame):
     """
 
     :param frame:
@@ -20,13 +20,13 @@ def get_class(frame: Frame):
     frame.operand_stack.push_ref(clazz)
 
 
-def hash_code(frame: Frame):
+def hash_code(frame: StackFrame):
     this = frame.local_vars.get_this()
     hash_value = hash(this)
     frame.operand_stack.push_numeric(hash_value)
 
 
-def clone(frame: Frame):
+def clone(frame: StackFrame):
     this = frame.local_vars.get_this()
     cloneable = this.get_class().loader.load_class("java/lang/Cloneable")
     if not this.get_class().is_implements(cloneable):

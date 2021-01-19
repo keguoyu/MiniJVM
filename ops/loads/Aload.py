@@ -7,10 +7,10 @@
 @desc: 引用类型变量加载指令
 """
 from ops.base.Instruction import Index8Instruction, NoOperandsInstruction
-from runtime import Frame
+from vm import StackFrame
 
 
-def _aload(frame: Frame, index):
+def _aload(frame: StackFrame, index):
     ref = frame.local_vars.get_ref(index)
     if ref == 0:
         ref = None

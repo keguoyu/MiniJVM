@@ -2,12 +2,12 @@
 # encoding: utf-8
 
 from ops.base.Instruction import Index8Instruction, Index16Instruction
-from runtime.Frame import Frame
-from runtime.heap.CpClassRef import ClassRef
-from runtime.heap.StringPool import j_string
+from vm.StackFrame import StackFrame
+from vm.runtime.CpClassRef import ClassRef
+from vm.runtime.StringConstantPool import j_string
 
 
-def _ldc(frame: Frame, index):
+def _ldc(frame: StackFrame, index):
     stack = frame.operand_stack
     clazz = frame.method.get_class()
     c = clazz.constant_pool.get_constant(index)
@@ -39,7 +39,7 @@ class LDC_W(Index16Instruction):
 
 
 class LDC2_W(Index16Instruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         cp = frame.method.get_class().constant_pool
         c = cp.get_constant(self.index)

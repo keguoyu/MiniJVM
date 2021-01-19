@@ -5,7 +5,7 @@ import importlib
 
 from ops.base.Instruction import NoOperandsInstruction
 from native.Registry import find_native_method
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 # 模块名
 modules = [
@@ -22,7 +22,7 @@ modules = [
 
 
 class INVOKE_NATIVE(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         method = frame.method
         class_name = method.get_class().name
         method_name = method.name

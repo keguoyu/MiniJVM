@@ -2,11 +2,11 @@
 # encoding: utf-8
 
 from native.Registry import register
-from runtime.Frame import Frame
-from runtime.heap.StringPool import python_string, j_string
+from vm.StackFrame import StackFrame
+from vm.runtime.StringConstantPool import python_string, j_string
 
 
-def get_primitive_class(frame: Frame):
+def get_primitive_class(frame: StackFrame):
     """
     static native Class<?> getPrimitiveClass(String name);
     getPrimitiveClass()是静态方法
@@ -26,7 +26,7 @@ def get_primitive_class(frame: Frame):
     frame.operand_stack.push_ref(clazz)
 
 
-def get_name_0(frame: Frame):
+def get_name_0(frame: StackFrame):
     """
     private native String getName0()
     :param frame:
@@ -46,7 +46,7 @@ def get_name_0(frame: Frame):
     frame.operand_stack.push_ref(name_obj)
 
 
-def desired_assertion_status_0(frame: Frame):
+def desired_assertion_status_0(frame: StackFrame):
     """
     private static native boolean desiredAssertionStatus0(Class<?> clazz);
     :param frame:

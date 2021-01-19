@@ -2,11 +2,11 @@
 # encoding: utf-8
 
 from ops.base.Instruction import Index16Instruction
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
 class INSTANCE_OF(Index16Instruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         # 弹出对象引用
         ref = stack.pop_ref()

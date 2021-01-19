@@ -5,10 +5,10 @@ import ctypes
 import struct
 
 from native.Registry import register
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
-def floatToRawIntBits(frame: Frame):
+def floatToRawIntBits(frame: StackFrame):
     """
     public static native int floatToRawIntBits(float value);
     (F)I
@@ -21,7 +21,7 @@ def floatToRawIntBits(frame: Frame):
     frame.operand_stack.push_numeric(ctypes.c_int32(bits).value)
 
 
-def intBitsToFloat(frame: Frame):
+def intBitsToFloat(frame: StackFrame):
     """
     public static native float intBitsToFloat(int bits);
     (I)F

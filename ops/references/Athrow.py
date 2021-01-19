@@ -2,12 +2,12 @@
 # encoding: utf-8
 
 from ops.base.Instruction import NoOperandsInstruction
-from runtime.Frame import Frame
-from runtime.heap import StringPool
+from vm.StackFrame import StackFrame
+from vm.runtime import StringConstantPool
 
 
 class ATHROW(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         # 先从操作数栈中弹出异常对象引用
         ex = frame.operand_stack.pop_ref()
         # 如果该引用是None，则抛出NullPointerException异常
@@ -61,7 +61,7 @@ def handle_uncaught_exception(thread, ex):
     thread.clear_stack()
 
     j_msg = ex.get_ref_var("detailMessage", "Ljava/lang/String;")
-    python_msg = StringPool.python_string(j_msg)
+    python_msg = StringConstantPool.python_string(j_msg)
     print(ex.get_class().java_name + ": " + python_msg)
 
     # 打印异常信息

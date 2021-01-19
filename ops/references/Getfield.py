@@ -2,11 +2,11 @@
 # encoding: utf-8
 
 from ops.base.Instruction import Index16Instruction
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
 class GET_FIELD(Index16Instruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         cp = frame.method.get_class().constant_pool
         field_ref = cp.get_constant(self.index)
         field = field_ref.resolve_field()

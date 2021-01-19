@@ -3,13 +3,13 @@
 
 from ops.base import MethodInvokeLogic
 from ops.base.Instruction import Index16Instruction
-from runtime.Frame import Frame
-from runtime.heap import MethodLookup
-from runtime.heap.StringPool import python_string
+from vm.StackFrame import StackFrame
+from vm.runtime import MethodLookup
+from vm.runtime.StringConstantPool import python_string
 
 
 class INVOKE_VIRTURL(Index16Instruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         current_class = frame.method.get_class()
         cp = current_class.constant_pool
         method_ref = cp.get_constant(self.index)

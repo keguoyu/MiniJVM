@@ -2,11 +2,11 @@
 # encoding: utf-8
 
 from native.Registry import register
-from runtime.Frame import Frame
-from runtime.heap.Object import Object
+from vm.StackFrame import StackFrame
+from vm.runtime.JvmObject import Object
 
 
-def arraycopy(frame: Frame):
+def arraycopy(frame: StackFrame):
     local_vars = frame.local_vars
     # 从局部变量表中获取5个参数
     src = local_vars.get_ref(0)

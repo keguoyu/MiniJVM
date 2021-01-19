@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from ops.base.Instruction import Instruction
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
 class NEW_ARRAY(Instruction):
@@ -21,7 +21,7 @@ class NEW_ARRAY(Instruction):
     def fetch_operands(self, reader):
         self.atype = reader.read_uint8()
 
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
 
         stack = frame.operand_stack
         count = stack.pop_numeric()

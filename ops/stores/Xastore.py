@@ -5,7 +5,7 @@
 import ctypes
 
 from ops.base.Instruction import NoOperandsInstruction
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
 def check_not_none(ref):
@@ -19,7 +19,7 @@ def check_index(arr_len, index):
 
 
 class AASTORE(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         ref = stack.pop_ref()
         index = stack.pop_numeric()
@@ -32,7 +32,7 @@ class AASTORE(NoOperandsInstruction):
 
 
 class BASTORE(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         val = stack.pop_numeric()
         index = stack.pop_numeric()
@@ -45,7 +45,7 @@ class BASTORE(NoOperandsInstruction):
 
 
 class CASTORE(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         val = stack.pop_numeric()
         index = int(stack.pop_numeric())
@@ -58,7 +58,7 @@ class CASTORE(NoOperandsInstruction):
 
 
 class DASTORE(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         val = stack.pop_double()
         index = int(stack.pop_numeric())
@@ -71,7 +71,7 @@ class DASTORE(NoOperandsInstruction):
 
 
 class FASTORE(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         val = stack.pop_float()
         index = stack.pop_numeric()
@@ -84,7 +84,7 @@ class FASTORE(NoOperandsInstruction):
 
 
 class IASTORE(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         val = stack.pop_numeric()
         index = stack.pop_numeric()
@@ -97,7 +97,7 @@ class IASTORE(NoOperandsInstruction):
 
 
 class LASTORE(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         val = stack.pop_numeric()
         index = stack.pop_numeric()
@@ -110,7 +110,7 @@ class LASTORE(NoOperandsInstruction):
 
 
 class SASTORE(NoOperandsInstruction):
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         stack = frame.operand_stack
         val = stack.pop_numeric()
         index = stack.pop_numeric()

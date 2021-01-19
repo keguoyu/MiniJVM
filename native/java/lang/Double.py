@@ -4,10 +4,10 @@
 import struct
 
 from native.Registry import register
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
-def doubleToRawLongBits(frame: Frame):
+def doubleToRawLongBits(frame: StackFrame):
     """
     public static native long doubleToRawLongBits(double value);
     (D)J
@@ -20,7 +20,7 @@ def doubleToRawLongBits(frame: Frame):
     frame.operand_stack.push_numeric(bits)
 
 
-def longBitsToDouble(frame: Frame):
+def longBitsToDouble(frame: StackFrame):
     """
     public static native double longBitsToDouble(long bits);
     (J)D

@@ -5,7 +5,7 @@ import copy
 import ctypes
 
 from ops.base.Instruction import Instruction
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
 # 从操作数栈中弹出n个int值，并确保它们都大于等于0，如果其中任何一个小于0，则抛出NegativeArraySizeException异常。
@@ -41,7 +41,7 @@ class MULTI_ANEW_ARRAY(Instruction):
         self.index = reader.read_uint16()
         self.dimensions = reader.read_uint8()
 
-    def execute(self, frame: Frame):
+    def execute(self, frame: StackFrame):
         cp = frame.method.get_class().constant_pool
         class_ref = cp.get_constant(ctypes.c_uint(self.index).value)
         # 解析出来的直接就是数组类

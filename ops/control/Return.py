@@ -2,10 +2,10 @@
 # encoding: utf-8
 
 from ops.base.Instruction import NoOperandsInstruction
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
-def _numeric_return(frame: Frame):
+def _numeric_return(frame: StackFrame):
     thread = frame.thread
     current_frame = thread.pop_frame()
     invoker_frame = thread.top_frame

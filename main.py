@@ -9,21 +9,21 @@ curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
 sys.path.append(rootPath)
 
-from Cmd import Cmd
-from Interpreter import Interpreter
-from classloader.Classpath import Classpath
-from runtime.heap.ClassLoader import ClassLoader
+from args.Argv import Argv
+from vm.ByteCodeInterpreter import ByteCodeInterpreter
+from lang.classloader.Classpath import Classpath
+from vm.runtime.ClassLoader import ClassLoader
 
 
 def main():
-    cmd = Cmd(sys.argv)
-    if cmd.version:
-        Cmd.print_version()
+    argv = Argv(sys.argv)
+    if argv.version:
+        Argv.print_version()
     else:
-        start_JVM(cmd)
+        start_jvm(argv)
 
 
-def start_JVM(cmd):
+def start_jvm(cmd):
     class_path = Classpath.parse(cmd.jreOption, cmd.class_path)
 
     class_loader = ClassLoader(class_path, cmd.debug)
@@ -36,7 +36,7 @@ def start_JVM(cmd):
         main_method = main_class.get_main_method()
 
         if main_method:
-            Interpreter.interpret(main_method, cmd.debug, cmd.args)
+            ByteCodeInterpreter.interpret(main_method, cmd.debug, cmd.args)
         else:
             print("Main method not found in class {0}".format(cmd.class_name))
 

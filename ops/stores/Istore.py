@@ -2,10 +2,10 @@
 # encoding: utf-8
 
 from ops.base.Instruction import Index8Instruction, NoOperandsInstruction
-from runtime.Frame import Frame
+from vm.StackFrame import StackFrame
 
 
-def _istore(frame: Frame, index):
+def _istore(frame: StackFrame, index):
     val = frame.operand_stack.pop_numeric()
     frame.local_vars.set_numeric(index, val)
 

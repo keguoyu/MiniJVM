@@ -2,8 +2,8 @@
 # encoding: utf-8
 
 from native.Registry import register
-from runtime.Frame import Frame
-from runtime.heap.Class import Class
+from vm.StackFrame import StackFrame
+from vm.runtime.JvmClass import JvmClass
 
 
 class StackTraceElement:
@@ -22,7 +22,7 @@ class StackTraceElement:
         return "{0}.{1}({2}:{3})".format(self.class_name, self.method_name, self.file_name, self.line_number)
 
 
-def fill_in_stack_trace(frame: Frame):
+def fill_in_stack_trace(frame: StackFrame):
     """
     private native Throwable fillInStackTrace(int dummy);
     (I)Ljava/lang/Throwable;
@@ -51,7 +51,7 @@ def create_stack_trace_elements(t_obj, thread):
 
 
 # 计算所需跳过的帧数
-def distance_to_object(clazz: Class):
+def distance_to_object(clazz: JvmClass):
     distance = 0
     c = clazz.super_class
     while c is not None:
