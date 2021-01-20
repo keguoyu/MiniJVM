@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
-from vm.runtime.ClassLoader import ClassLoader
+from lang.classloader.JvmClassLoader import JvmClassLoader
 from vm.runtime.JvmObject import Object
 
 # 字符串池
 interned_strings = dict()
 
 
-def j_string(loader: ClassLoader, python_str):
+def j_string(loader: JvmClassLoader, python_str):
     """
     根据python字符串返回相应的Java字符串实例
     :param loader: 

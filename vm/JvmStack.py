@@ -16,7 +16,7 @@ class JvmStack:
         if self.size >= self.max_size:
             raise RuntimeError("java.lang.StackOverflowError")
         if self.__top:
-            frame.lower = self.__top
+            frame.next = self.__top
         self.__top = frame
         self.size += 1
 
@@ -26,8 +26,8 @@ class JvmStack:
             raise RuntimeError("jvm stack is empty!")
 
         top = self.__top
-        self.__top = top.lower
-        top.lower = None
+        self.__top = top.next
+        top.next = None
         self.size -= 1
 
         return top
@@ -43,7 +43,7 @@ class JvmStack:
         frame = self.__top
         while frame is not None:
             frames.append(frame)
-            frame = frame.lower
+            frame = frame.next
 
         return frames
 

@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from ops.base.Instruction import NoOperandsInstruction
-from vm.Slot import copy_slot
+from vm.DataWrapper import copy_slot
 
 
 class DUP(NoOperandsInstruction):

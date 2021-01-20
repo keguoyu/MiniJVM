@@ -1,38 +1,41 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from pyclbr import Class
 
-from lang.classloader.Classpath import Classpath
-from vm.Slot import Slots
+from vm.DataWrapper import DataWrapperArray
 from vm.runtime import AccessFlags
-from vm.runtime.JvmClass import JvmClass
 from vm.runtime.ClassNameHelper import PrimitiveTypes
 from vm.runtime.Field import Field
+from vm.runtime.JvmClass import JvmClass
+from vm.runtime.StringConstantPool import j_string
 
+JAVA_LANG_CLASS = 'java/lang/Class'
+JAVA_LANG_OBJECT = 'java/lang/Object'
+JAVA_LANG_CLONEABLE = 'java/lang/Cloneable'
+JAVA_LANG_SERIALIZABLE = 'java/io/Serializable'
 
 class ClassLoader:
-    def __init__(self, class_path: Classpath, verbose_flag: bool):
-        # 保存Classpath
-        self.cp = class_path
-        # 加载信息选项
-        self.verbose_flag = verbose_flag
-        # 记录已经加载的类数据
-        self.class_map = dict()
+    def __init__(self, method_area, cl, debug):
+        self.cl = cl
+        self.debug = debug
+        self.method_area = method_area
         self.load_basic_classes()
         self.load_primitive_classes()
 
     # 把类数据加载到方法区
     def load_class(self, name):
-        clazz = self.class_map.get(name)
+        clazz = self.method_area.get(name)
         if clazz:
             # 类已经加载
             return clazz
+        # 数组类
         elif name[0] == '[':
             clazz = self.load_array_class(name)
         else:
             clazz = self.load_non_array_class(name)
 
         # 在类加载完之后，判断java.lang.Class是否已经加载。
-        jl_class_class = self.class_map.get('java/lang/Class')
+        jl_class_class = self.method_area.get(JAVA_LANG_CLASS)
         if jl_class_class:
             # 如果加载，则给类关联类对象
             clazz.j_class = jl_class_class.new_object()
@@ -49,10 +52,10 @@ class ClassLoader:
         # 数组类不需要初始化，把init_started字段设置成True
         clazz.init_started = True
         # 数组类的超类是java.lang.Object
-        clazz.super_class = self.load_class("java/lang/Object")
+        clazz.super_class = self.load_class(JAVA_LANG_OBJECT)
         # 并实现了java.lang.Cloneable和java.io.Serializable接口
-        clazz.interfaces = [self.load_class("java/lang/Cloneable"), self.load_class("java/io/Serializable")]
-        self.class_map[name] = clazz
+        clazz.interfaces = [self.load_class(JAVA_LANG_CLONEABLE), self.load_class(JAVA_LANG_SERIALIZABLE)]
+        self.method_area[name] = clazz
         return clazz
 
     # 非数组类（普通类）加载
@@ -63,13 +66,13 @@ class ClassLoader:
         clazz = self.define_class(data, name)
         # 进行链接
         self.link(clazz)
-        if self.verbose_flag:
+        if self.debug:
             print("[Loaded {0} from {1}]".format(name, entry))
         return clazz
 
     # 读取class文件，将数据读取到内存中
     def read_class(self, name):
-        data, entry, error = self.cp.read_class(name)
+        data, entry, error = self.cl.read_class(name)
         if error:
             raise RuntimeError("java.lang.ClassNotFoundException: " + name)
         # entry: 为了打印类加载信息，把最终加载class文件的类路径项也返回给调用者
@@ -82,7 +85,7 @@ class ClassLoader:
         clazz.loader = self
         self.resolve_super_class(clazz)
         self.resolve_interfaces(clazz)
-        self.class_map[clazz.name] = clazz
+        self.method_area[clazz.name] = clazz
         return clazz
 
     # 把class文件数据转换成Class对象
@@ -93,7 +96,6 @@ class ClassLoader:
         class_file = ClassFile()
         cf, err = class_file.parse(data)
         if err:
-            print(err)
             raise RuntimeError("{} java.lang.ClassFormatError!".format(nmae))
         else:
             return JvmClass.new_class(cf)
@@ -101,7 +103,7 @@ class ClassLoader:
     # 解析超类的符号引用
     @staticmethod
     def resolve_super_class(clazz: JvmClass):
-        if clazz.name != "java/lang/object" and clazz.super_class_name:
+        if clazz.name != JAVA_LANG_OBJECT and clazz.super_class_name:
             clazz.super_class = clazz.loader.load_class(clazz.super_class_name)
 
     # 解析接口的符号引用
@@ -114,7 +116,7 @@ class ClassLoader:
 
     # 类的链接
     @staticmethod
-    def link(clazz: JvmClass):
+    def link(clazz: Class):
         ClassLoader.verify(clazz)
         ClassLoader.prepare(clazz)
 
@@ -123,7 +125,7 @@ class ClassLoader:
         pass
 
     @staticmethod
-    def prepare(clazz: JvmClass):
+    def prepare(clazz: Class):
         # 计算实例字段的个数，同时给它们编号
         ClassLoader.calc_instantce_field_slot_ids(clazz)
         # 计算静态字段的个数，同时给它们编号
@@ -133,7 +135,7 @@ class ClassLoader:
 
     # 计算实例字段的个数，同时给它们编号
     @staticmethod
-    def calc_instantce_field_slot_ids(clazz: JvmClass):
+    def calc_instantce_field_slot_ids(clazz: Class):
         slot_id = 0
         if clazz.super_class:
             slot_id = clazz.super_class.instance_slot_count
@@ -147,7 +149,7 @@ class ClassLoader:
 
     # 计算静态字段的个数，同时给它们编号
     @staticmethod
-    def calc_static_field_slot_ids(clazz: JvmClass):
+    def calc_static_field_slot_ids(clazz: Class):
         slot_id = 0
         for field in clazz.fields:
             if field.is_static():
@@ -159,7 +161,7 @@ class ClassLoader:
     # 给类变量分配空间，给它们赋予初始值
     @staticmethod
     def alloc_and_init_static_vars(clazz: JvmClass):
-        clazz.static_vars = Slots(clazz.static_slot_count)
+        clazz.static_vars = DataWrapperArray(clazz.static_slot_count)
         for field in clazz.fields:
             if field.is_static() and field.is_final():
                 ClassLoader.init_static_final_var(clazz, field)
@@ -167,8 +169,6 @@ class ClassLoader:
     # 从常量池中加载常量值，然后给静态变量赋值
     @staticmethod
     def init_static_final_var(clazz: JvmClass, field: Field):
-        from vm.runtime.StringConstantPool import j_string
-
         static_vars = clazz.static_vars
         constant_pool = clazz.constant_pool
         cp_index = field.const_value_index
@@ -191,9 +191,9 @@ class ClassLoader:
 
     def load_basic_classes(self):
         # 先加载java.lang.Class类
-        jl_class_class = self.load_class("java/lang/Class")
-        # 遍历class_map，给已经加载的每个类关联类的对象。
-        for _, clazz in self.class_map.items():
+        jl_class_class = self.load_class(JAVA_LANG_CLASS)
+        # 遍历method_area，给已经加载的每个类关联类的对象。
+        for _, clazz in self.method_area.items():
             if clazz.j_class is None:
                 clazz.j_class = jl_class_class.new_object()
                 clazz.j_class.extra = clazz
@@ -220,6 +220,6 @@ class ClassLoader:
         clazz.loader = self
         clazz.init_started = True
 
-        clazz.j_class = self.class_map.get('java/lang/Class').new_object()
+        clazz.j_class = self.method_area.get(JAVA_LANG_CLASS).new_object()
         clazz.j_class.extra = clazz
-        self.class_map[class_name] = clazz
+        self.method_area[class_name] = clazz

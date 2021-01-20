@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from lang.classfile.ClassFile import ClassFile
-from vm.Slot import Slots
+from vm.DataWrapper import DataWrapperArray
 from vm.runtime import ClassNameHelper, AccessFlags
 from vm.runtime.ClassNameHelper import PrimitiveTypes
 from vm.runtime.ConstantPool import ConstantPool
@@ -48,7 +48,7 @@ class JvmClass:
         # 类变量所占空间
         self.static_slot_count = 1
         # 静态变量
-        self.static_vars = Slots()
+        self.static_vars = DataWrapperArray()
         # 表示类的<clinit>方法是否已经开始执行
         self.init_started = False
         # 表示java.lang.Class实例

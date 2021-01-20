@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
+# 描述class文件的格式
+#
 
 from lang.classfile.AttrSourceFile import SourceFileAttribute
 from lang.classfile.AttributeInfo import AttributeInfo

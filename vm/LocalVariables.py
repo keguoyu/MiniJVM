@@ -3,12 +3,12 @@
 
 import struct
 
-from vm.Slot import Slot
+from vm.DataWrapper import DataWrapper
 
 
 class LocalVariables(list):
     def __init__(self, max_locals):
-        super().__init__([Slot() for _ in range(max_locals)])
+        super().__init__([DataWrapper() for _ in range(max_locals)])
 
     def set_numeric(self, index, val):
         self[index].num = val
@@ -40,7 +40,7 @@ class LocalVariables(list):
     def get_ref(self, index):
         return self[index].ref
 
-    def set_slot(self, index, slot: Slot):
+    def set_slot(self, index, slot: DataWrapper):
         # todo:
         # self[index] = copy.deepcopy(slot)
         self[index] = slot

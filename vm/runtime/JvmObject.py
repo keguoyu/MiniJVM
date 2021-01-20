@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from vm.Slot import Slots, copy_slot
+from vm.DataWrapper import DataWrapperArray, copy_slot
 from vm.runtime.JvmClass import JvmClass
 
 
@@ -22,7 +22,7 @@ class Object:
 
     @staticmethod
     def new_object(clazz: JvmClass):
-        return Object(clazz, Slots(clazz.instance_slot_count))
+        return Object(clazz, DataWrapperArray(clazz.instance_slot_count))
 
     def get_class(self):
         return self._class
@@ -91,11 +91,11 @@ class Object:
         return Object(self._class, self.clone_data())
 
     def clone_data(self):
-        if not isinstance(self.data, Slots):
+        if not isinstance(self.data, DataWrapperArray):
             new_data = list(self.data)
             return new_data
         else:
-            new_data = Slots(len(self.data))
+            new_data = DataWrapperArray(len(self.data))
             for i, slot in enumerate(self.data):
                 new_data[i] = copy_slot(slot)
             return new_data

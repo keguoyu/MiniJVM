@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+
 class ClassReader:
     def __init__(self, class_data):
         self.data = class_data

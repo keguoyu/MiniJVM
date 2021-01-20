@@ -3,7 +3,7 @@
 
 import struct
 
-from vm.Slot import Slot
+from vm.DataWrapper import DataWrapper
 
 
 class OperandStack:
@@ -11,7 +11,7 @@ class OperandStack:
         self.slots = []
         self.size = 0
         if max_stack > 0:
-            self.slots = [Slot() for _ in range(max_stack)]
+            self.slots = [DataWrapper() for _ in range(max_stack)]
 
     def push_numeric(self, val):
         self.slots[self.size].num = val
@@ -58,7 +58,7 @@ class OperandStack:
         self.slots[self.size].ref = None
         return ref
 
-    def push_slot(self, slot: Slot):
+    def push_slot(self, slot: DataWrapper):
         self.slots[self.size] = slot
         self.size += 1
 
